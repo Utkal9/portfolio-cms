@@ -13,7 +13,7 @@ import {
 import toast from "react-hot-toast";
 import { semesterAPI } from "../../services/api.js";
 
-const GRADES = ["O", "A+", "A", "B+", "B", "C", "F"];
+const GRADES = ["O", "A+", "A", "B+", "B", "C", "F", "IP"];
 const GRADE_POINTS = {
     O: 10,
     "A+": 9,
@@ -22,14 +22,16 @@ const GRADE_POINTS = {
     B: 6,
     C: 5,
     F: 0,
+    IP: null, // In Progress
 };
 
 const EMPTY_COURSE = { code: "", name: "", credits: 3, grade: "O" };
 const EMPTY_SEM = { semester: 1, year: "", label: "", courses: [] };
 
 function calcSGPA(courses) {
-    const tc = courses.reduce((s, c) => s + Number(c.credits), 0);
-    const tp = courses.reduce(
+    const graded = courses.filter((c) => c.grade !== "IP");
+    const tc = graded.reduce((s, c) => s + Number(c.credits), 0);
+    const tp = graded.reduce(
         (s, c) => s + Number(c.credits) * (GRADE_POINTS[c.grade] || 0),
         0,
     );
@@ -84,7 +86,9 @@ function CourseRow({ course, index, onChange, onDelete }) {
                     className={inputCls + " w-full"}
                 >
                     {GRADES.map((g) => (
-                        <option key={g}>{g}</option>
+                        <option key={g} value={g}>
+                            {g === "IP" ? "⏳ In Progress" : g}
+                        </option>
                     ))}
                 </select>
             </div>

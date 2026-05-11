@@ -13,12 +13,20 @@ const GRADE_POINTS = {
     B: 6,
     C: 5,
     F: 0,
+    IP: null,
 };
 
 function calcSGPA(courses) {
-    const totalCredits = courses.reduce((s, c) => s + c.credits, 0);
-    const totalPoints = courses.reduce(
-        (s, c) => s + c.credits * (GRADE_POINTS[c.grade] || 0),
+    // Only include courses with a real grade
+    const gradedCourses = courses.filter(
+        (c) => c.grade !== "IP" && GRADE_POINTS[c.grade] !== null,
+    );
+    const totalCredits = gradedCourses.reduce(
+        (s, c) => s + Number(c.credits),
+        0,
+    );
+    const totalPoints = gradedCourses.reduce(
+        (s, c) => s + Number(c.credits) * (GRADE_POINTS[c.grade] || 0),
         0,
     );
     return totalCredits > 0 ? +(totalPoints / totalCredits).toFixed(2) : 0;

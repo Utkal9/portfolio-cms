@@ -16,38 +16,43 @@ import { semesterAPI } from "../services/api.js";
 const GRADE_COLORS = {
     O: {
         bg: "bg-emerald-500/15",
-        text: "text-emerald-500",
+        text: "text-emerald-400",
         border: "border-emerald-500/30",
     },
     "A+": {
         bg: "bg-green-500/15",
-        text: "text-green-500",
+        text: "text-green-400",
         border: "border-green-500/30",
     },
     A: {
         bg: "bg-blue-500/15",
-        text: "text-blue-500",
+        text: "text-blue-400",
         border: "border-blue-500/30",
     },
     "B+": {
         bg: "bg-cyan-500/15",
-        text: "text-cyan-500",
+        text: "text-cyan-400",
         border: "border-cyan-500/30",
     },
     B: {
         bg: "bg-yellow-500/15",
-        text: "text-yellow-500",
+        text: "text-yellow-400",
         border: "border-yellow-500/30",
     },
     C: {
         bg: "bg-orange-500/15",
-        text: "text-orange-500",
+        text: "text-orange-400",
         border: "border-orange-500/30",
     },
     F: {
         bg: "bg-red-500/15",
-        text: "text-red-500",
+        text: "text-red-400",
         border: "border-red-500/30",
+    },
+    IP: {
+        bg: "bg-slate-500/15",
+        text: "text-slate-400",
+        border: "border-slate-500/30",
     },
 };
 
@@ -242,13 +247,24 @@ function SemesterCard({ sem, index }) {
                                                                         course.credits
                                                                     }
                                                                 </td>
-                                                                <td className="py-2.5 flex justify-center">
+                                                                <td className="py-2.5 text-center">
                                                                     <span
-                                                                        className={`inline-flex items-center justify-center w-7 h-5 rounded text-[10px] font-bold border ${gcolor.bg} ${gcolor.text} ${gcolor.border}`}
+                                                                        className={`inline-block px-2.5 py-1 rounded-lg
+    text-xs font-bold border
+    ${gcolor.bg} ${gcolor.text} ${gcolor.border}`}
                                                                     >
-                                                                        {
-                                                                            course.grade
-                                                                        }
+                                                                        {course.grade ===
+                                                                        "IP"
+                                                                            ? "⏳ IP"
+                                                                            : course.grade}
+                                                                    </span>
+                                                                </td>
+                                                                <td className="py-2.5 text-right">
+                                                                    <span className="text-slate-500 dark:text-slate-400 font-medium text-sm">
+                                                                        {course.grade ===
+                                                                        "IP"
+                                                                            ? "—"
+                                                                            : points}
                                                                     </span>
                                                                 </td>
                                                             </motion.tr>
@@ -256,6 +272,62 @@ function SemesterCard({ sem, index }) {
                                                     },
                                                 )}
                                             </tbody>
+                                            <tfoot>
+                                                <tr className="border-t-2 border-slate-200 dark:border-dark-border">
+                                                    <td
+                                                        colSpan={2}
+                                                        className="pt-3 text-xs font-bold text-slate-500 uppercase"
+                                                    >
+                                                        Total
+                                                        {sem.courses.some(
+                                                            (c) =>
+                                                                c.grade ===
+                                                                "IP",
+                                                        ) && (
+                                                            <span
+                                                                className="ml-2 text-[9px] text-slate-600 font-normal
+          normal-case tracking-normal"
+                                                            >
+                                                                (IP courses
+                                                                excluded)
+                                                            </span>
+                                                        )}
+                                                    </td>
+                                                    <td className="pt-3 text-center text-sm font-bold text-slate-700 dark:text-white">
+                                                        {sem.courses
+                                                            .filter(
+                                                                (c) =>
+                                                                    c.grade !==
+                                                                    "IP",
+                                                            )
+                                                            .reduce(
+                                                                (s, c) =>
+                                                                    s +
+                                                                    c.credits,
+                                                                0,
+                                                            )}
+                                                        {sem.courses.some(
+                                                            (c) =>
+                                                                c.grade ===
+                                                                "IP",
+                                                        ) && (
+                                                            <span className="text-slate-500 text-xs">
+                                                                /
+                                                                {sem.courses.reduce(
+                                                                    (s, c) =>
+                                                                        s +
+                                                                        c.credits,
+                                                                    0,
+                                                                )}
+                                                            </span>
+                                                        )}
+                                                    </td>
+                                                    <td />
+                                                    <td className="pt-3 text-right text-sm font-bold grad-text">
+                                                        SGPA: {sem.sgpa}
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
