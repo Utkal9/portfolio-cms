@@ -259,75 +259,11 @@ function SemesterCard({ sem, index }) {
                                                                             : course.grade}
                                                                     </span>
                                                                 </td>
-                                                                <td className="py-2.5 text-right">
-                                                                    <span className="text-slate-500 dark:text-slate-400 font-medium text-sm">
-                                                                        {course.grade ===
-                                                                        "IP"
-                                                                            ? "—"
-                                                                            : points}
-                                                                    </span>
-                                                                </td>
                                                             </motion.tr>
                                                         );
                                                     },
                                                 )}
                                             </tbody>
-                                            <tfoot>
-                                                <tr className="border-t-2 border-slate-200 dark:border-dark-border">
-                                                    <td
-                                                        colSpan={2}
-                                                        className="pt-3 text-xs font-bold text-slate-500 uppercase"
-                                                    >
-                                                        Total
-                                                        {sem.courses.some(
-                                                            (c) =>
-                                                                c.grade ===
-                                                                "IP",
-                                                        ) && (
-                                                            <span
-                                                                className="ml-2 text-[9px] text-slate-600 font-normal
-          normal-case tracking-normal"
-                                                            >
-                                                                (IP courses
-                                                                excluded)
-                                                            </span>
-                                                        )}
-                                                    </td>
-                                                    <td className="pt-3 text-center text-sm font-bold text-slate-700 dark:text-white">
-                                                        {sem.courses
-                                                            .filter(
-                                                                (c) =>
-                                                                    c.grade !==
-                                                                    "IP",
-                                                            )
-                                                            .reduce(
-                                                                (s, c) =>
-                                                                    s +
-                                                                    c.credits,
-                                                                0,
-                                                            )}
-                                                        {sem.courses.some(
-                                                            (c) =>
-                                                                c.grade ===
-                                                                "IP",
-                                                        ) && (
-                                                            <span className="text-slate-500 text-xs">
-                                                                /
-                                                                {sem.courses.reduce(
-                                                                    (s, c) =>
-                                                                        s +
-                                                                        c.credits,
-                                                                    0,
-                                                                )}
-                                                            </span>
-                                                        )}
-                                                    </td>
-                                                    <td />
-                                                    <td className="pt-3 text-right text-sm font-bold grad-text">
-                                                        SGPA: {sem.sgpa}
-                                                    </td>
-                                                </tr>
-                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
