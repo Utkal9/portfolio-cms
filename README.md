@@ -1,142 +1,307 @@
-```markdown
-# Utkal Behera - Dynamic Personal Portfolio
 
-A highly interactive, full-stack personal portfolio built with the **MERN Stack** (MongoDB, Express.js, React, Node.js). This portfolio goes beyond a static site by featuring a complete custom Admin Dashboard, allowing real-time content management without touching the codebase.
+<div align="center">
 
-## 🚀 Features
+# 🚀 Utkal Behera — Developer Portfolio CMS
 
-* **Dynamic Content Management**: Manage Projects, Skills, Experiences, Education, Certifications, and Semesters directly from a protected Admin Dashboard.
-* **Immersive UI/UX**: Features smooth page transitions, GSAP animations, Framer Motion, and a custom Three.js/Canvas particle cursor for a premium feel.
-* **Live Coding Stats**: Real-time LeetCode statistics integration via a custom GraphQL proxy.
-* **Site Configuration System**: Toggle visibility of specific sections, reorder sections, and update hero text, themes, and SEO metadata directly from the admin panel.
-* **Integrated Contact System**: Messages sent via the contact form are stored in the database and forwarded using Nodemailer/Resend and SendGrid.
-* **Secure Authentication**: JWT-based authentication and Bcrypt password hashing for the admin portal.
-* **Cloud Storage Integration**: Direct integration with Cloudinary for uploading and managing project images, certificates, and resumes.
+> **A production-ready MERN Stack Portfolio CMS with a secure Admin Dashboard, dynamic content management, beautiful animations, Cloudinary integration, JWT authentication, and responsive design.**
 
-## 💻 Tech Stack
+<p align="center">
+<a href="https://my-portfolio-nu-flax-96.vercel.app"><img src="https://img.shields.io/badge/🌐-Live_Demo-6C63FF?style=for-the-badge"/></a>
+<a href="https://github.com/Utkal9/My-Portfolio"><img src="https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github"/></a>
+<a href="https://www.linkedin.com/in/utkal-behera59/"><img src="https://img.shields.io/badge/LinkedIn-Utkal_Behera-blue?style=for-the-badge&logo=linkedin"/></a>
+<a href="mailto:utkalbehera59@gmail.com"><img src="https://img.shields.io/badge/Email-Contact-red?style=for-the-badge&logo=gmail"/></a>
+</p>
 
-**Frontend**
-* **Framework:** React 18 (with Vite)
-* **Styling:** Tailwind CSS, PostCSS
-* **Animations:** Framer Motion, GSAP, @react-three/fiber, @react-three/drei
-* **State Management:** Zustand
-* **Routing:** React Router DOM
-* **Icons & Typography:** Lucide React, React Icons
+![MIT License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-Express-339933?logo=node.js)
+![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-38BDF8?logo=tailwindcss)
 
-**Backend**
-* **Environment:** Node.js, Express.js
-* **Database:** MongoDB with Mongoose ODM
-* **Authentication:** JSON Web Tokens (JWT), Bcrypt.js
-* **File Uploads:** Multer, Cloudinary, Streamifier
-* **Email Services:** Nodemailer, Resend, @sendgrid/mail
+</div>
 
-## 🛠️ Installation & Setup
+---
 
-### Prerequisites
-* Node.js installed on your machine
-* A MongoDB database URI
-* A Cloudinary account for media storage
-* A Gmail/Resend account for contact form emails
+# 📖 Overview
 
-### 1. Clone the repository
-```bash
-git clone [https://github.com/utkal9/My-Portfolio.git](https://github.com/utkal9/My-Portfolio.git)
-cd My-Portfolio
+This project is **far more than a personal portfolio**. It is a **dynamic Portfolio CMS** that allows every major section of the website to be managed through a secure Admin Dashboard.
 
+No source code changes are required to update projects, skills, education, certifications, experience, hero content, resumes, media assets, or site configuration.
+
+---
+
+# ✨ Features
+
+## 🌐 Public Portfolio
+
+- Responsive UI
+- Light & Dark Mode
+- GSAP + Framer Motion animations
+- Three.js particle effects
+- Project showcase
+- Skills filtering
+- Resume download
+- Contact form
+- Live coding profile integration
+- SEO friendly
+
+## 🔐 Admin Dashboard
+
+- JWT Authentication
+- Secure Login
+- CRUD for Projects
+- CRUD for Skills
+- CRUD for Experience
+- CRUD for Education
+- CRUD for Certifications
+- Semester Management
+- Resume Management
+- Social Links
+- Media Uploads
+- Contact Messages
+- Dashboard Overview
+- Section Visibility Toggle
+- Hero Configuration
+
+## ☁️ Cloud Features
+
+- Cloudinary Image Upload
+- Resume Upload
+- Media Management
+
+## 📧 Contact System
+
+- Contact form
+- Database storage
+- Nodemailer
+- Resend
+- SendGrid support
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+- React 18
+- Vite
+- Tailwind CSS
+- React Router DOM
+- Zustand
+- GSAP
+- Framer Motion
+- Three.js
+- Lucide React
+
+## Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT
+- bcrypt.js
+- Multer
+- Cloudinary
+- Nodemailer
+- Resend
+- SendGrid
+
+---
+
+# 📂 Folder Structure
+
+```text
+My-Portfolio
+├── backend
+│   ├── config
+│   ├── controllers
+│   ├── middleware
+│   ├── models
+│   ├── routes
+│   ├── utils
+│   └── server.js
+│
+├── frontend
+│   ├── public
+│   ├── src
+│   │   ├── assets
+│   │   ├── components
+│   │   ├── pages
+│   │   ├── services
+│   │   ├── store
+│   │   ├── hooks
+│   │   └── App.jsx
+│   └── vite.config.js
+└── README.md
 ```
 
-### 2. Backend Setup
+---
 
-Navigate to the backend directory, install dependencies, and configure your environment variables.
+# 🚀 Installation
+
+## Clone
+
+```bash
+git clone https://github.com/Utkal9/My-Portfolio.git
+cd My-Portfolio
+```
+
+## Backend
 
 ```bash
 cd backend
 npm install
-
 ```
 
-Create a `.env` file in the `backend` directory based on the `.env.example`:
+Create `.env`
 
 ```env
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_super_secret_jwt_key
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_secret
 JWT_EXPIRES_IN=7d
 FRONTEND_URL=http://localhost:5173
 
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 
-# Email Configuration
-MAIL_USER=utkalbehera59@gmail.com
-MAIL_PASS=your_app_password
-ADMIN_EMAIL=utkalbehera59@gmail.com
-
-# Admin Default Credentials (Change upon first login)
-ADMIN_EMAIL_DEFAULT=utkalbehera59@gmail.com
-ADMIN_PASSWORD_DEFAULT=Admin@123
-
+MAIL_USER=
+MAIL_PASS=
+ADMIN_EMAIL=
+ADMIN_EMAIL_DEFAULT=
+ADMIN_PASSWORD_DEFAULT=
 ```
 
-Run the backend server:
+Run:
 
 ```bash
 npm run dev
-
 ```
 
-*Note: Upon the first successful database connection, an initial admin user is automatically seeded using the credentials provided in your `.env` file.*
-
-### 3. Frontend Setup
-
-Open a new terminal, navigate to the frontend directory, install dependencies, and run the development server.
+## Frontend
 
 ```bash
 cd frontend
 npm install
-
 ```
 
-Create a `.env.local` file in the `frontend` directory:
+Create `.env.local`
 
 ```env
 VITE_API_URL=http://localhost:5000/api
-
 ```
 
-Run the frontend server:
+Run
 
 ```bash
 npm run dev
-
 ```
 
-## 📁 Project Structure
+---
 
-```text
-├── backend/
-│   ├── config/         # Database and Cloudinary configurations
-│   ├── controllers/    # Route controllers logic
-│   ├── middleware/     # JWT verification and upload middlewares
-│   ├── models/         # Mongoose schemas (User, Project, SiteConfig, etc.)
-│   ├── routes/         # Express API routes
-│   └── server.js       # Entry point for the Node.js server
-│
-└── frontend/
-    ├── public/         # Static assets, SVG logos, favicons
-    ├── src/
-    │   ├── components/ # Reusable UI components & Admin panels
-    │   ├── pages/      # Top-level route pages (Portfolio, Login, AdminDashboard)
-    │   ├── services/   # Axios API configurations
-    │   ├── store/      # Zustand state management
-    │   ├── App.jsx     # Main React component with routing and Particle setup
-    │   └── main.jsx    # React DOM rendering entry
-    └── tailwind.config.js # Tailwind styling rules
+# 📷 Screenshots
 
+Create an `assets/` folder and place:
+
+- banner.png
+- hero.png
+- about.png
+- skills.png
+- projects.png
+- contact.png
+- dashboard.png
+- light-theme.png
+
+Then embed them like:
+
+```md
+![Hero](assets/hero.png)
+
+![Dashboard](assets/dashboard.png)
 ```
 
-## 📜 License
+---
 
-© 2026 Utkal Behera. All rights reserved.
+# 🔒 Security
+
+- JWT Authentication
+- Password Hashing
+- Protected Admin Routes
+- Environment Variables
+- Secure File Uploads
+
+---
+
+# ⚡ Performance
+
+- Lazy Loading
+- Optimized Assets
+- Responsive Images
+- Code Splitting
+- Production Build
+
+---
+
+# 🚀 Deployment
+
+Frontend: Vercel
+
+Backend: Node.js server (Render/Railway/EC2)
+
+Database: MongoDB Atlas
+
+Media: Cloudinary
+
+---
+
+# 🗺 Roadmap
+
+- AI Assistant
+- Blog CMS
+- Visitor Analytics
+- GitHub Contribution Graph
+- Multi-language
+- Email Templates
+- Docker Compose
+- CI/CD
+
+---
+
+# 🤝 Contributing
+
+```bash
+git checkout -b feature/new-feature
+git commit -m "Add feature"
+git push origin feature/new-feature
+```
+
+Open a Pull Request.
+
+---
+
+# 📄 License
+
+Licensed under the MIT License.
+
+---
+
+# 👨‍💻 Author
+
+**Utkal Behera**
+
+- 🌐 https://my-portfolio-nu-flax-96.vercel.app
+- 💼 https://www.linkedin.com/in/utkal-behera59/
+- 📧 utkalbehera59@gmail.com
+- 💻 https://github.com/Utkal9
+
+---
+
+<div align="center">
+
+### ⭐ If you like this project, consider giving it a star!
+
+Made with ❤️ by **Utkal Behera**
+
+</div>
