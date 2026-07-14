@@ -22,18 +22,26 @@ import semesterRoutes from "./routes/semesterRoutes.js";
 const app = express();
 
 // ── CORS — allow all vercel + localhost ───────────────────────────────
+const allowedOrigins = [
+    "https://utkalbehera.com",
+    "https://www.utkalbehera.com",
+    process.env.FRONTEND_URL,
+];
+
 app.use(
     cors({
-        origin: (origin, callback) => {
+        origin(origin, callback) {
             if (!origin) return callback(null, true);
+
             if (
                 origin.includes("localhost") ||
                 origin.includes("vercel.app") ||
-                origin === process.env.FRONTEND_URL
+                allowedOrigins.includes(origin)
             ) {
                 return callback(null, true);
             }
-            callback(new Error(`CORS blocked: ${origin}`));
+
+            return callback(new Error(`CORS blocked: ${origin}`));
         },
         credentials: true,
     }),
