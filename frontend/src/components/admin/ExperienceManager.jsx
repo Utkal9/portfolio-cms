@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useExperienceStore } from "../../store/index.js";
+import { optimizeCloudinaryImage } from "../../utils/cloudinary.js";
 
 const EMPTY = {
     role: "",
@@ -221,8 +222,12 @@ function ExpForm({ initial = EMPTY, onSave, onCancel, loading }) {
                             </div>
                         ) : (
                             <img
-                                src={certPreview}
+                                src={optimizeCloudinaryImage(certPreview, 600)}
                                 alt="Certificate preview"
+                                loading="lazy"
+                                decoding="async"
+                                width={600}
+                                height={192}
                                 className="w-full max-h-48 object-cover rounded-xl border border-dark-border"
                             />
                         )}
@@ -458,8 +463,15 @@ export default function ExperienceManager() {
                                             </div>
                                         ) : (
                                             <img
-                                                src={exp.certificate.url}
+                                                src={optimizeCloudinaryImage(
+                                                    exp.certificate.url,
+                                                    200,
+                                                )}
                                                 alt="cert"
+                                                loading="lazy"
+                                                decoding="async"
+                                                width={64}
+                                                height={40}
                                                 className="w-16 h-10 object-cover rounded-lg
                             border border-dark-border"
                                             />

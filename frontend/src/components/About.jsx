@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import api, { semesterAPI } from "../services/api.js";
 import { motion } from "framer-motion";
 import { MapPin, GraduationCap, Award } from "lucide-react";
+import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 
 export function About({ config }) {
     const about = config?.about || {};
@@ -95,8 +96,15 @@ export function About({ config }) {
                                     <div className="w-full h-full rounded-[1.8rem] overflow-hidden relative">
                                         {about.profileImage ? (
                                             <img
-                                                src={about.profileImage}
+                                                src={optimizeCloudinaryImage(
+                                                    about.profileImage,
+                                                    600,
+                                                )}
                                                 alt="Profile"
+                                                loading="lazy"
+                                                decoding="async"
+                                                width={600}
+                                                height={600}
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (

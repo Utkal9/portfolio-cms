@@ -86,6 +86,10 @@ function Sidebar({ onClose }) {
                     <img
                         src="/logo/logo-icon.webp"
                         alt="UB"
+                        loading="lazy"
+                        decoding="async"
+                        width={32}
+                        height={32}
                         className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
                     />
                     <div>

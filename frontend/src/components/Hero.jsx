@@ -212,48 +212,65 @@ export default function Hero({ config }) {
     });
     const [statsLoading, setStatsLoading] = useState(true);
 
-    // Fetch all stats in parallel
+    // Fetch all stats in parallel with robust error handling
     useEffect(() => {
         const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-        Promise.allSettled([
-            // Projects count
-            fetch(`${API}/projects`).then((r) => r.json()),
-            // LeetCode
-            fetch(`${API}/leetcode/${LC_USERNAME}`).then((r) => r.json()),
-            // Experience (internships)
-            fetch(`${API}/experience`).then((r) => r.json()),
-            // Semesters (CGPA)
-            fetch(`${API}/semesters`).then((r) => r.json()),
-        ]).then(([projRes, lcRes, expRes, semRes]) => {
-            const projects =
-                projRes.status === "fulfilled"
-                    ? projRes.value?.data?.length || projRes.value?.total || 0
-                    : null;
+        let mounted = true;
 
-            const lcSolved =
-                lcRes.status === "fulfilled" && lcRes.value?.totalSolved
-                    ? lcRes.value.totalSolved
-                    : null;
+        const safeFetchJson = async (url) => {
+            try {
+                const r = await fetch(url);
+                if (!r.ok) {
+                    console.warn(
+                        `Failed to fetch ${url}: ${r.status} ${r.statusText}`,
+                    );
+                    return null;
+                }
+                return await r.json();
+            } catch (err) {
+                console.warn(`Network error fetching ${url}:`, err);
+                return null;
+            }
+        };
 
-            const internships =
-                expRes.status === "fulfilled"
-                    ? expRes.value?.data?.length || 0
-                    : null;
+        (async () => {
+            setStatsLoading(true);
+            try {
+                const [projRes, lcRes, expRes, semRes] = await Promise.all([
+                    safeFetchJson(`${API}/projects`),
+                    safeFetchJson(`${API}/leetcode/${LC_USERNAME}`),
+                    safeFetchJson(`${API}/experience`),
+                    safeFetchJson(`${API}/semesters`),
+                ]);
 
-            const cgpa =
-                semRes.status === "fulfilled" && semRes.value?.cgpa
-                    ? semRes.value.cgpa
-                    : null;
+                if (!mounted) return;
 
-            setStats({
-                projects: projects !== null ? `${projects}+` : null,
-                lcSolved: lcSolved !== null ? `${lcSolved}+` : null,
-                cgpa: cgpa !== null ? `${cgpa}` : null,
-                internships: internships !== null ? `${internships}+` : null,
-            });
-            setStatsLoading(false);
-        });
+                const projects = projRes?.data?.length || projRes?.total || 0;
+
+                const lcSolved = lcRes?.totalSolved || null;
+
+                const internships = expRes?.data?.length || 0;
+
+                const cgpa = semRes?.cgpa ?? null;
+
+                setStats({
+                    projects: projects !== null ? `${projects}+` : null,
+                    lcSolved: lcSolved !== null ? `${lcSolved}+` : null,
+                    cgpa: cgpa !== null ? `${cgpa}` : null,
+                    internships:
+                        internships !== null ? `${internships}+` : null,
+                });
+            } catch (err) {
+                console.warn("Failed to load hero stats:", err);
+            } finally {
+                if (mounted) setStatsLoading(false);
+            }
+        })();
+
+        return () => {
+            mounted = false;
+        };
     }, []);
 
     const socials = [

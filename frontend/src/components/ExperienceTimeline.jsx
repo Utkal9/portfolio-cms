@@ -9,6 +9,7 @@ import {
     Calendar,
 } from "lucide-react";
 import { useExperienceStore } from "../store/index.js";
+import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 
 function ExperienceModal({ exp, onClose }) {
     useEffect(() => {
@@ -159,8 +160,15 @@ function ExperienceModal({ exp, onClose }) {
                   border-slate-100 dark:border-dark-border mb-3"
                                 >
                                     <img
-                                        src={exp.certificate.url}
+                                        src={optimizeCloudinaryImage(
+                                            exp.certificate.url,
+                                            600,
+                                        )}
                                         alt="Experience Certificate"
+                                        loading="lazy"
+                                        decoding="async"
+                                        width={600}
+                                        height={288}
                                         className="w-full object-cover max-h-72"
                                     />
                                 </div>

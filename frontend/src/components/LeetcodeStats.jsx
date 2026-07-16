@@ -110,6 +110,15 @@ export default function LeetcodeStats() {
             const base =
                 import.meta.env.VITE_API_URL || "http://localhost:5000/api";
             const res = await fetch(`${base}/leetcode/${USERNAME}`);
+
+            if (!res.ok) {
+                console.warn(
+                    `LeetCode stats fetch failed: ${res.status} ${res.statusText}`,
+                );
+                setError(true);
+                return;
+            }
+
             const data = await res.json();
 
             if (data && data.status === "success") {
@@ -118,20 +127,38 @@ export default function LeetcodeStats() {
                 setError(true);
             }
 
-            // Fetch calendar data
+            // Fetch calendar data (rate-limited endpoint)
             try {
                 const calRes = await fetch(
                     `https://alfa-leetcode-api.onrender.com/${USERNAME}/calendar`,
                 );
-                const calData = await calRes.json();
-                if (calData && calData.submissionCalendar) {
-                    setCalendarData(calData.submissionCalendar);
+
+                if (!calRes.ok) {
+                    if (calRes.status === 429) {
+                        console.warn(
+                            "LeetCode calendar request rate-limited (429). Showing fallback calendar.",
+                        );
+                    } else {
+                        console.warn(
+                            `LeetCode calendar fetch failed: ${calRes.status} ${calRes.statusText}`,
+                        );
+                    }
+                    // Do not call calRes.json() when non-OK — show fallback UI instead
+                    setCalendarData(null);
+                } else {
+                    const calData = await calRes.json();
+                    if (calData && calData.submissionCalendar) {
+                        setCalendarData(calData.submissionCalendar);
+                    } else {
+                        setCalendarData(null);
+                    }
                 }
             } catch (calErr) {
-                console.error("Failed to fetch LeetCode calendar:", calErr);
+                console.warn("Failed to fetch LeetCode calendar:", calErr);
+                setCalendarData(null);
             }
         } catch (err) {
-            console.error("Fetch error:", err);
+            console.warn("LeetCode fetch error:", err);
             setError(true);
         } finally {
             setLoading(false);

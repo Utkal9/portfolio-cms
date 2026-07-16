@@ -11,14 +11,7 @@ import {
     Code2,
 } from "lucide-react";
 import { useProjectStore } from "../store/index.js";
-function optimizeCloudinaryImage(url, width = 900) {
-    if (!url || !url.includes("res.cloudinary.com")) return url;
-
-    return url.replace(
-        "/image/upload/",
-        `/image/upload/f_auto,q_auto,w_${width}/`,
-    );
-}
+import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 function getEmbedUrl(url, muted = true) {
     if (!url) return null;
     const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
@@ -113,6 +106,10 @@ function ProjectCard({ project, onClick, index }) {
                     <img
                         src={optimizeCloudinaryImage(thumb, 900)}
                         alt={project.title}
+                        loading="lazy"
+                        decoding="async"
+                        width={900}
+                        height={480}
                         className="absolute inset-0 w-full h-full object-cover opacity-70
               group-hover:scale-105 group-hover:opacity-90 transition-all duration-500"
                     />
@@ -381,6 +378,10 @@ function ProjectModal({ project, onClose }) {
                                                 1200,
                                             )}
                                             alt={project.title}
+                                            loading="lazy"
+                                            decoding="async"
+                                            width={1200}
+                                            height={480}
                                             className="absolute inset-0 w-full h-full object-cover opacity-50"
                                         />
                                     )}

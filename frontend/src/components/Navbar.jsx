@@ -68,6 +68,10 @@ export default function Navbar() {
                     <img
                         src="/logo/logo-icon.webp"
                         alt="UB Logo"
+                        loading="lazy"
+                        decoding="async"
+                        width={36}
+                        height={36}
                         className="w-9 h-9 rounded-xl object-cover
               group-hover:scale-105 transition-transform duration-200"
                     />

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Edit2, Trash2, X, Upload, Award } from "lucide-react";
 import toast from "react-hot-toast";
 import { certsAPI } from "../../services/api.js";
+import { optimizeCloudinaryImage } from "../../utils/cloudinary.js";
 
 const EMPTY = {
     title: "",
@@ -111,8 +112,12 @@ function CertForm({ initial = EMPTY, onSave, onCancel, loading }) {
                 </label>
                 {preview && (
                     <img
-                        src={preview}
+                        src={optimizeCloudinaryImage(preview)}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
+                        width={600}
+                        height={128}
                         className="mt-2 w-full h-32 object-cover rounded-xl border border-dark-border"
                     />
                 )}
@@ -267,8 +272,15 @@ export default function CertificationManager() {
                         >
                             {cert.image?.url ? (
                                 <img
-                                    src={cert.image.url}
+                                    src={optimizeCloudinaryImage(
+                                        cert.image.url,
+                                        600,
+                                    )}
                                     alt={cert.title}
+                                    loading="lazy"
+                                    decoding="async"
+                                    width={600}
+                                    height={128}
                                     className="w-full h-32 object-cover"
                                 />
                             ) : (

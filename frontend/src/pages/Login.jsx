@@ -54,6 +54,10 @@ export default function Login() {
                         <img
                             src="/logo/logo-icon.webp"
                             alt="UB Logo"
+                            loading="lazy"
+                            decoding="async"
+                            width={64}
+                            height={64}
                             className="w-16 h-16 rounded-2xl mx-auto mb-4 object-cover shadow-glow-blue"
                         />
                         <h1

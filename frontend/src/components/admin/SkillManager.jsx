@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Edit2, Trash2, X, GripVertical } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSkillStore } from "../../store/index.js";
+import { optimizeCloudinaryImage } from "../../utils/cloudinary.js";
 
 // ── Same icon map as SkillSection.jsx ────────────────────────────────
 const ICON_MAP = {
@@ -139,8 +140,12 @@ function SkillPreviewCard({ skill }) {
                 <div className="absolute inset-0 flex items-center justify-center">
                     {iconUrl ? (
                         <img
-                            src={iconUrl}
+                            src={optimizeCloudinaryImage(iconUrl, 200)}
                             alt={skill.name}
+                            loading="lazy"
+                            decoding="async"
+                            width={24}
+                            height={24}
                             className="w-6 h-6 object-contain"
                             onError={(e) => {
                                 e.target.style.display = "none";
@@ -209,8 +214,15 @@ function SkillForm({ initial = EMPTY, onSave, onCancel, loading }) {
                             {hasRealIcon ? (
                                 <>
                                     <img
-                                        src={iconUrl}
+                                        src={optimizeCloudinaryImage(
+                                            iconUrl,
+                                            200,
+                                        )}
                                         alt=""
+                                        loading="lazy"
+                                        decoding="async"
+                                        width={16}
+                                        height={16}
                                         className="w-4 h-4 object-contain"
                                     />
                                     <span className="text-[10px] text-green-400 font-semibold">

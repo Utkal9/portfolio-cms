@@ -122,6 +122,10 @@ export function GithubStats() {
                                     <img
                                         src={user.avatar_url}
                                         alt={user.login}
+                                        loading="lazy"
+                                        decoding="async"
+                                        width={64}
+                                        height={64}
                                         className="w-16 h-16 rounded-full border-2 border-accent-blue/30 flex-shrink-0"
                                     />
 

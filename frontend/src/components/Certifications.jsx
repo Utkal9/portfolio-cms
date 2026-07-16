@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Award, Shield } from "lucide-react";
 import { certsAPI } from "../services/api.js";
+import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 
 export default function Certifications() {
     const [certs, setCerts] = useState([]);
@@ -85,8 +86,15 @@ export default function Certifications() {
                     border border-slate-100 dark:border-dark-border"
                                     >
                                         <img
-                                            src={cert.image.url}
+                                            src={optimizeCloudinaryImage(
+                                                cert.image.url,
+                                                600,
+                                            )}
                                             alt={cert.title}
+                                            loading="lazy"
+                                            decoding="async"
+                                            width={600}
+                                            height={144}
                                             className="w-full h-36 object-cover
                         group-hover:scale-105 transition-transform duration-500"
                                         />

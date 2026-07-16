@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Upload, Save, Eye } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSiteConfigStore } from "../../store/index.js";
+import { optimizeCloudinaryImage } from "../../utils/cloudinary.js";
 import { configAPI } from "../../services/api.js";
 
 const TAB_LIST = ["Hero", "About", "Contact", "SEO", "Footer", "Theme"];
@@ -144,8 +145,15 @@ export default function HeroEditor() {
                     <div className="flex items-center gap-4">
                         {form.hero?.profileImage && (
                             <img
-                                src={form.hero.profileImage}
+                                src={optimizeCloudinaryImage(
+                                    form.hero.profileImage,
+                                    600,
+                                )}
                                 alt="Profile"
+                                loading="lazy"
+                                decoding="async"
+                                width={64}
+                                height={64}
                                 className="w-16 h-16 rounded-full object-cover border-2 border-dark-border"
                             />
                         )}
@@ -202,8 +210,15 @@ export default function HeroEditor() {
                     <div className="flex items-center gap-4">
                         {form.about?.profileImage && (
                             <img
-                                src={form.about.profileImage}
+                                src={optimizeCloudinaryImage(
+                                    form.about.profileImage,
+                                    600,
+                                )}
                                 alt="About"
+                                loading="lazy"
+                                decoding="async"
+                                width={64}
+                                height={64}
                                 className="w-16 h-16 rounded-xl object-cover border border-dark-border"
                             />
                         )}

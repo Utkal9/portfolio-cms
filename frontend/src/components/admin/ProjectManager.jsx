@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useProjectStore } from "../../store/index.js";
+import { optimizeCloudinaryImage } from "../../utils/cloudinary.js";
 
 const EMPTY = {
     title: "",
@@ -43,8 +44,15 @@ function PreviewCard({ project }) {
             >
                 {project.images?.[0]?.url ? (
                     <img
-                        src={project.images[0].url}
+                        src={optimizeCloudinaryImage(
+                            project.images[0].url,
+                            900,
+                        )}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
+                        width={900}
+                        height={480}
                         className="absolute inset-0 w-full h-full object-cover opacity-60"
                     />
                 ) : null}
@@ -435,8 +443,12 @@ function ProjectForm({ initial = EMPTY, onSave, onCancel, loading }) {
                             {previews.map((p, i) => (
                                 <img
                                     key={i}
-                                    src={p}
+                                    src={optimizeCloudinaryImage(p, 900)}
                                     alt=""
+                                    loading="lazy"
+                                    decoding="async"
+                                    width={64}
+                                    height={48}
                                     className="w-16 h-12 object-cover rounded-lg border border-dark-border"
                                 />
                             ))}
@@ -672,8 +684,15 @@ export default function ProjectManager() {
                             <div className="h-36 bg-dark-bg2 relative overflow-hidden flex items-center justify-center">
                                 {p.images?.[0]?.url ? (
                                     <img
-                                        src={p.images[0].url}
+                                        src={optimizeCloudinaryImage(
+                                            p.images[0].url,
+                                            900,
+                                        )}
                                         alt={p.title}
+                                        loading="lazy"
+                                        decoding="async"
+                                        width={900}
+                                        height={360}
                                         className="w-full h-full object-cover opacity-70"
                                     />
                                 ) : (

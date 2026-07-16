@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSkillStore } from "../store/index.js";
+import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 
 // ── Map skill names to devicon SVG URLs ──────────────────────────────
 const ICON_MAP = {
@@ -159,8 +160,12 @@ function RingCard({ skill, animate }) {
                 <div className="absolute inset-0 flex items-center justify-center">
                     {iconUrl ? (
                         <img
-                            src={iconUrl}
+                            src={optimizeCloudinaryImage(iconUrl, 200)}
                             alt={skill.name}
+                            loading="lazy"
+                            decoding="async"
+                            width={28}
+                            height={28}
                             className="w-7 h-7 object-contain"
                             onError={(e) => {
                                 e.target.style.display = "none";
