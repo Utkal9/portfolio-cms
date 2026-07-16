@@ -9,6 +9,7 @@ const Login = lazy(() => import("./pages/Login.jsx"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
 import ProtectedRoute from "./components/ui/ProtectedRoute.jsx";
 import GoogleAnalytics from "./components/analytics/GoogleAnalytics";
+import Clarity from "./components/analytics/Clarity";
 
 // ── Colour palette ───────────────────────────────────────────────────
 const HUES = [195, 220, 245, 265, 285, 310]; // cyan→blue→indigo→violet→purple→pink
@@ -265,6 +266,7 @@ function AppInner() {
     return (
         <>
             <GoogleAnalytics />
+            <Clarity />
             <ParticleCursor />
             <ScrollProgress />
             <Toaster
