@@ -1,0 +1,15 @@
+/* TEAM */
+
+Developer: Utkal Behera
+Website: https://utkalbehera.com
+GitHub: https://github.com/Utkal9
+LinkedIn: https://www.linkedin.com/in/utkal-behera59
+
+/* SITE */
+
+Built with:
+React
+Vite
+Node.js
+Express.js
+MongoDB
