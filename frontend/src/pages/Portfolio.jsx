@@ -13,6 +13,7 @@ import Footer from "../components/Footer.jsx";
 import GithubStats from "../components/GithubStats.jsx";
 import LeetcodeStats from "../components/LeetcodeStats.jsx";
 import { lazy, Suspense } from "react";
+import SEO from "../components/seo/SEO";
 const CinematicIntro = lazy(() => import("../components/CinematicIntro.jsx"));
 
 const SECTION_MAP = {
@@ -66,24 +67,32 @@ export default function Portfolio() {
     const visible = config?.sections || {};
 
     return (
-        <div className="min-h-screen bg-light-bg dark:bg-dark-bg transition-colors duration-300">
-            {/* Universe intro — shows once per session (lazy-loaded) */}
-            {showIntro && (
-                <Suspense fallback={null}>
-                    <CinematicIntro onDone={handleIntroDone} />
-                </Suspense>
-            )}
+        <>
+            <SEO
+                title="Utkal Behera | MERN Stack Developer | React | Next.js | Node.js"
+                description="Official portfolio of Utkal Behera showcasing MERN Stack projects, AI applications, cloud deployments, internships, achievements, and software engineering work."
+                keywords="Utkal Behera, MERN Developer, React Developer, Full Stack Developer, Node.js, MongoDB, Next.js, Portfolio"
+                url="https://utkalbehera.com/"
+            />
+            <div className="min-h-screen bg-light-bg dark:bg-dark-bg transition-colors duration-300">
+                {/* Universe intro — shows once per session (lazy-loaded) */}
+                {showIntro && (
+                    <Suspense fallback={null}>
+                        <CinematicIntro onDone={handleIntroDone} />
+                    </Suspense>
+                )}
 
-            <Navbar />
-            <main>
-                {order.map((key) => {
-                    if (visible[key] === false) return null;
-                    const Section = SECTION_MAP[key];
-                    if (!Section) return null;
-                    return <Section key={key} config={config} />;
-                })}
-            </main>
-            <Footer config={config} />
-        </div>
+                <Navbar />
+                <main>
+                    {order.map((key) => {
+                        if (visible[key] === false) return null;
+                        const Section = SECTION_MAP[key];
+                        if (!Section) return null;
+                        return <Section key={key} config={config} />;
+                    })}
+                </main>
+                <Footer config={config} />
+            </div>
+        </>
     );
 }
