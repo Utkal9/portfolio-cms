@@ -19,7 +19,10 @@ export default function SEO({
 
             <meta property="og:type" content="website" />
             <meta property="og:title" content={title} />
-            <meta property="og:description" content={description} />
+            <meta
+                property="og:description"
+                content="Full Stack MERN Developer building scalable web apps with React, Next.js, Node.js, MongoDB, AI, and AWS."
+            />
             <meta property="og:image" content={image} />
             <meta property="og:url" content={url} />
 

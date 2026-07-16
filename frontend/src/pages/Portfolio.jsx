@@ -69,8 +69,8 @@ export default function Portfolio() {
     return (
         <>
             <SEO
-                title="Utkal Behera | MERN Stack Developer | React | Next.js | Node.js"
-                description="Official portfolio of Utkal Behera showcasing MERN Stack projects, AI applications, cloud deployments, internships, achievements, and software engineering work."
+                title="Utkal Behera | Full Stack MERN Developer"
+                description="Official portfolio of Utkal Behera showcasing MERN projects, AI applications, internships, cloud deployments, and software engineering work."
                 keywords="Utkal Behera, MERN Developer, React Developer, Full Stack Developer, Node.js, MongoDB, Next.js, Portfolio"
                 url="https://utkalbehera.com/"
             />
