@@ -1,12 +1,12 @@
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { useThemeStore } from "./store/index.js";
 
-import Portfolio from "./pages/Portfolio.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
-import Login from "./pages/Login.jsx";
+const Portfolio = lazy(() => import("./pages/Portfolio.jsx"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
 import ProtectedRoute from "./components/ui/ProtectedRoute.jsx";
 
 // ── Colour palette ───────────────────────────────────────────────────
@@ -273,20 +273,30 @@ function AppInner() {
                     style: { fontFamily: "DM Sans, sans-serif" },
                 }}
             />
-            <PageTransition>
-                <Routes>
-                    <Route path="/*" element={<Portfolio />} />
-                    <Route path="/admin/login" element={<Login />} />
-                    <Route
-                        path="/admin/*"
-                        element={
-                            <ProtectedRoute>
-                                <AdminDashboard />
-                            </ProtectedRoute>
-                        }
-                    />
-                </Routes>
-            </PageTransition>
+            <Suspense
+                fallback={
+                    <div className="flex items-center justify-center min-h-screen bg-[#0B1120] text-white">
+                        Loading...
+                    </div>
+                }
+            >
+                <PageTransition>
+                    <Routes>
+                        <Route path="/*" element={<Portfolio />} />
+
+                        <Route path="/admin/login" element={<Login />} />
+
+                        <Route
+                            path="/admin/*"
+                            element={
+                                <ProtectedRoute>
+                                    <AdminDashboard />
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Routes>
+                </PageTransition>
+            </Suspense>
         </>
     );
 }
