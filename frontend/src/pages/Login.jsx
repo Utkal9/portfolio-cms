@@ -52,7 +52,7 @@ export default function Login() {
                     {/* ── Logo ── */}
                     <div className="text-center mb-8">
                         <img
-                            src="/logo/logo-icon.png"
+                            src="/logo/logo-icon.webp"
                             alt="UB Logo"
                             className="w-16 h-16 rounded-2xl mx-auto mb-4 object-cover shadow-glow-blue"
                         />

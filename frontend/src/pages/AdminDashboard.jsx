@@ -84,7 +84,7 @@ function Sidebar({ onClose }) {
             <div className="h-16 flex items-center px-5 border-b border-dark-border flex-shrink-0">
                 <div className="flex items-center gap-3">
                     <img
-                        src="/logo/logo-icon.png"
+                        src="/logo/logo-icon.webp"
                         alt="UB"
                         className="w-8 h-8 rounded-lg object-cover flex-shrink-0"
                     />

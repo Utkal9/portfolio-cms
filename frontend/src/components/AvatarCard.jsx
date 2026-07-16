@@ -5,6 +5,14 @@ import {
     useSpring,
     useTransform,
 } from "framer-motion";
+function optimizeCloudinaryImage(url, width = 800) {
+    if (!url || !url.includes("res.cloudinary.com")) return url;
+
+    return url.replace(
+        "/image/upload/",
+        `/image/upload/f_auto,q_auto,w_${width}/`,
+    );
+}
 // ── Avatar + silent video ─────────────────────────────────────────────
 export default function AvatarCard({ profileImage }) {
     const mouseX = useMotionValue(0.5);
@@ -90,7 +98,7 @@ export default function AvatarCard({ profileImage }) {
                     {/* Profile photo — always present as base */}
                     {profileImage && (
                         <img
-                            src={profileImage}
+                            src={optimizeCloudinaryImage(profile.image, 800)}
                             alt="Utkal Behera"
                             loading="eager"
                             decoding="async"
