@@ -115,6 +115,8 @@ function RingCard({ skill, animate }) {
                     height="64"
                     viewBox="0 0 64 64"
                     className="-rotate-90 absolute inset-0"
+                    aria-hidden="true"
+                    focusable="false"
                 >
                     <defs>
                         <linearGradient

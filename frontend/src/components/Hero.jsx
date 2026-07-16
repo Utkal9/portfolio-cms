@@ -558,7 +558,8 @@ export default function Hero({ config }) {
                                     whileHover={{ y: -4, scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
                                     title={s.label}
-                                    className={`w-11 h-11 rounded-2xl flex items-center justify-center
+                                    aria-label={s.label}
+                                    className={`a11y-hit w-11 h-11 rounded-2xl flex items-center justify-center
                     border text-slate-500 dark:text-slate-300 bg-slate-100/85 dark:bg-white/5 border-slate-300/60 dark:border-white/10 transition-all duration-300 ${s.hover}`}
                                 >
                                     {s.icon}

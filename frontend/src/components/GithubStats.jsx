@@ -33,7 +33,7 @@ export function GithubStats() {
             setUser(u.data);
             setRepos(r.data);
         } catch (err) {
-            console.error("GitHub API error:", err.message);
+            console.warn("GitHub API error:", err.message);
             setError(true);
         } finally {
             setLoading(false);

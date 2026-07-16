@@ -393,6 +393,8 @@ export default function CloudIntro({ onDone }) {
                                 height="36"
                                 viewBox="0 0 24 18"
                                 fill="none"
+                                aria-hidden="true"
+                                focusable="false"
                             >
                                 <path
                                     d="M20 9.5h-.9A7 7 0 1 0 7 13.5H20a3.5 3.5 0 0 0 0-7z"

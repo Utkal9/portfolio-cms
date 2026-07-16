@@ -308,7 +308,7 @@ export default function ExperienceManager() {
             }
             setEditing(null);
         } catch (error) {
-            console.error("THE CRASH IS HAPPENING HERE:", error);
+            console.warn("THE CRASH IS HAPPENING HERE:", error);
             toast.error("Error saving");
         } finally {
             setSaving(false);

@@ -23,7 +23,7 @@ export function About({ config }) {
                 }
             })
             .catch((err) => {
-                console.error("Failed to fetch CGPA", err);
+                console.warn("Failed to fetch CGPA", err);
                 setCgpa("N/A");
             });
     }, []);

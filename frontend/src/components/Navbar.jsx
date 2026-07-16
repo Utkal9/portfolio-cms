@@ -115,7 +115,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-2">
                     <button
                         onClick={toggle}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center
+                        className="a11y-hit w-9 h-9 rounded-xl flex items-center justify-center
               bg-slate-100 dark:bg-dark-card2 hover:bg-slate-200 dark:hover:bg-dark-card
               text-slate-600 dark:text-slate-300 transition-all duration-200"
                         aria-label="Toggle theme"
@@ -156,8 +156,13 @@ export default function Navbar() {
 
                     <button
                         onClick={() => setMenuOpen((v) => !v)}
-                        className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center
+                        className="a11y-hit md:hidden w-9 h-9 rounded-xl flex items-center justify-center
               bg-slate-100 dark:bg-dark-card2 text-slate-600 dark:text-slate-300"
+                        aria-label={
+                            menuOpen
+                                ? "Close navigation menu"
+                                : "Open navigation menu"
+                        }
                     >
                         {menuOpen ? <X size={18} /> : <Menu size={18} />}
                     </button>

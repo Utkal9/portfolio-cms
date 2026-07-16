@@ -236,7 +236,7 @@ export default function LeetcodeStats() {
 
             return activities;
         } catch (e) {
-            console.error("Failed to parse calendar data", e);
+            console.warn("Failed to parse calendar data", e);
             return null;
         }
     }, [calendarData, stats]);
@@ -378,7 +378,8 @@ export default function LeetcodeStats() {
                                     <button
                                         onClick={fetchStats}
                                         title="Refresh live stats"
-                                        className="w-9 h-9 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-dark-card2 text-slate-500 hover:text-accent-blue hover:bg-accent-blue/10 transition-all duration-300"
+                                        aria-label="Refresh LeetCode stats"
+                                        className="a11y-hit w-9 h-9 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-dark-card2 text-slate-500 hover:text-accent-blue hover:bg-accent-blue/10 transition-all duration-300"
                                     >
                                         <RefreshCw
                                             size={14}

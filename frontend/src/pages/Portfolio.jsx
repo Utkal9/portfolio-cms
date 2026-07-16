@@ -12,7 +12,8 @@ import ContactSection from "../components/ContactSection.jsx";
 import Footer from "../components/Footer.jsx";
 import GithubStats from "../components/GithubStats.jsx";
 import LeetcodeStats from "../components/LeetcodeStats.jsx";
-import CinematicIntro from "../components/CinematicIntro.jsx";
+import { lazy, Suspense } from "react";
+const CinematicIntro = lazy(() => import("../components/CinematicIntro.jsx"));
 
 const SECTION_MAP = {
     hero: Hero,
@@ -66,8 +67,12 @@ export default function Portfolio() {
 
     return (
         <div className="min-h-screen bg-light-bg dark:bg-dark-bg transition-colors duration-300">
-            {/* Universe intro — shows once per session */}
-            {showIntro && <CinematicIntro onDone={handleIntroDone} />}
+            {/* Universe intro — shows once per session (lazy-loaded) */}
+            {showIntro && (
+                <Suspense fallback={null}>
+                    <CinematicIntro onDone={handleIntroDone} />
+                </Suspense>
+            )}
 
             <Navbar />
             <main>

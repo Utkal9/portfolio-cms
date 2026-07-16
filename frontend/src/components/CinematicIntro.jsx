@@ -676,7 +676,11 @@ function BuildScene({ onDone, index, total }) {
                             )}
                         </AnimatePresence>
 
-                        <svg className="absolute inset-0 h-full w-full">
+                        <svg
+                            className="absolute inset-0 h-full w-full"
+                            aria-hidden="true"
+                            focusable="false"
+                        >
                             {BUILD_NODES.map((node) => {
                                 if (!active.includes(node.id) || !showCore)
                                     return null;

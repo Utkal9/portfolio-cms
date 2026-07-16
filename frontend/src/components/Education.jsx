@@ -78,6 +78,8 @@ function SGPACircle({ sgpa }) {
                 height={radius * 2}
                 width={radius * 2}
                 className="transform -rotate-90"
+                aria-hidden="true"
+                focusable="false"
             >
                 <circle
                     stroke="currentColor"
