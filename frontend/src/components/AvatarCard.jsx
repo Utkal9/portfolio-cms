@@ -98,7 +98,7 @@ export default function AvatarCard({ profileImage }) {
                     {/* Profile photo — always present as base */}
                     {profileImage && (
                         <img
-                            src={optimizeCloudinaryImage(profile.image, 800)}
+                            src={optimizeCloudinaryImage(profileImage, 800)}
                             alt="Utkal Behera"
                             loading="eager"
                             decoding="async"
