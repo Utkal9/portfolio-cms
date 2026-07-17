@@ -22,6 +22,7 @@ export const updateSiteConfig = async (req, res) => {
             "about",
             "contact",
             "footer",
+            "pages",
             "seo",
             "sections",
             "sectionOrder",

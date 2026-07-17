@@ -19,6 +19,7 @@ import siteConfigRoutes from "./routes/siteConfigRoutes.js";
 import educationRoutes from "./routes/educationRoutes.js";
 import certRoutes from "./routes/certRoutes.js";
 import semesterRoutes from "./routes/semesterRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
 const app = express();
 
 // ── CORS — allow all vercel + localhost ───────────────────────────────
@@ -63,6 +64,7 @@ app.use("/api/site-config", siteConfigRoutes);
 app.use("/api/education", educationRoutes);
 app.use("/api/gallery/certs", certRoutes);
 app.use("/api/semesters", semesterRoutes);
+app.use("/api/blog", blogRoutes);
 // ── Health check ──────────────────────────────────────────────────────
 app.get("/api/health", (_, res) =>
     res.json({ status: "ok", time: new Date() }),

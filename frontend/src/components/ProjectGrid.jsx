@@ -71,6 +71,10 @@ function ProjectCard({ project, onClick, index }) {
         getYoutubeThumbnail(project.videoUrl) || project.images?.[0]?.url;
     const hasVideo = project.videoUrl && project.videoUrl.trim() !== "";
 
+    const handleOpen = () => {
+        onClick?.();
+    };
+
     const gradients = [
         "from-blue-100 to-indigo-100 dark:from-blue-950/60 dark:to-indigo-950/60",
         "from-emerald-100 to-teal-100 dark:from-emerald-950/60 dark:to-teal-950/60",
@@ -88,7 +92,7 @@ function ProjectCard({ project, onClick, index }) {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.08 }}
             whileHover={{ y: -6 }}
-            onClick={onClick}
+            onClick={handleOpen}
             className="cursor-pointer group rounded-2xl overflow-hidden
         bg-white dark:bg-dark-card
         border border-slate-200 dark:border-dark-border
@@ -234,7 +238,10 @@ function ProjectCard({ project, onClick, index }) {
                     )}
                     {hasVideo && (
                         <button
-                            onClick={onClick}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpen();
+                            }}
                             className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl
                 bg-red-500/10 border border-red-500/20 text-red-500 dark:text-red-400
                 text-[11px] font-bold hover:bg-red-500/20 transition-colors"

@@ -45,6 +45,7 @@ export const projectsAPI = {
     getAll: (params) => api.get("/projects", { params }),
     getAllAdmin: () => api.get("/projects/all"),
     getOne: (id) => api.get(`/projects/${id}`),
+    getBySlug: (slug) => api.get(`/projects/${slug}`),
     create: (formData) =>
         api.post("/projects", formData, {
             headers: { "Content-Type": "multipart/form-data" },
@@ -151,5 +152,14 @@ export const semesterAPI = {
     create: (data) => api.post("/semesters", data),
     update: (id, data) => api.put(`/semesters/${id}`, data),
     delete: (id) => api.delete(`/semesters/${id}`),
+};
+
+export const blogAPI = {
+    getAll: () => api.get("/blog"),
+    getAllAdmin: () => api.get("/blog/all"),
+    getBySlug: (slug) => api.get(`/blog/${slug}`),
+    create: (data) => api.post("/blog", data),
+    update: (id, data) => api.put(`/blog/${id}`, data),
+    delete: (id) => api.delete(`/blog/${id}`),
 };
 export default api;

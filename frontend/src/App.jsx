@@ -10,6 +10,11 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
 import ProtectedRoute from "./components/ui/ProtectedRoute.jsx";
 import GoogleAnalytics from "./components/analytics/GoogleAnalytics";
 import Clarity from "./components/analytics/Clarity";
+import PageShell from "./components/ui/PageShell.jsx";
+import ProjectDetailPage from "./pages/ProjectDetailPage.jsx";
+import BlogListPage from "./pages/BlogListPage.jsx";
+import BlogDetailPage from "./pages/BlogDetailPage.jsx";
+import StaticContentPage from "./pages/StaticContentPage.jsx";
 
 // ── Colour palette ───────────────────────────────────────────────────
 const HUES = [195, 220, 245, 265, 285, 310]; // cyan→blue→indigo→violet→purple→pink
@@ -286,7 +291,111 @@ function AppInner() {
             >
                 <PageTransition>
                     <Routes>
-                        <Route path="/*" element={<Portfolio />} />
+                        <Route path="/" element={<Portfolio />} />
+                        <Route
+                            path="/about"
+                            element={
+                                <PageShell>
+                                    <StaticContentPage slug="about" />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/projects"
+                            element={
+                                <PageShell>
+                                    <Portfolio />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/projects/:slug"
+                            element={
+                                <PageShell>
+                                    <ProjectDetailPage />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/blog"
+                            element={
+                                <PageShell>
+                                    <BlogListPage />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/blog/:slug"
+                            element={
+                                <PageShell>
+                                    <BlogDetailPage />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/skills"
+                            element={
+                                <PageShell>
+                                    <Portfolio />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/experience"
+                            element={
+                                <PageShell>
+                                    <Portfolio />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/resume"
+                            element={
+                                <PageShell>
+                                    <Portfolio />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/contact"
+                            element={
+                                <PageShell>
+                                    <Portfolio />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/privacy-policy"
+                            element={
+                                <PageShell>
+                                    <StaticContentPage slug="privacy-policy" />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/terms"
+                            element={
+                                <PageShell>
+                                    <StaticContentPage slug="terms" />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/404"
+                            element={
+                                <PageShell>
+                                    <StaticContentPage slug="404" />
+                                </PageShell>
+                            }
+                        />
+                        <Route
+                            path="/*"
+                            element={
+                                <PageShell>
+                                    <StaticContentPage slug="404" />
+                                </PageShell>
+                            }
+                        />
 
                         <Route path="/admin/login" element={<Login />} />
 

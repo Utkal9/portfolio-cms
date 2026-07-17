@@ -17,9 +17,21 @@ import { optimizeCloudinaryImage } from "../../utils/cloudinary.js";
 
 const EMPTY = {
     title: "",
+    slug: "",
     description: "",
     tagline: "",
     problem: "",
+    businessValue: "",
+    architecture: "",
+    systemDesign: "",
+    databaseDesign: "",
+    apiFlow: "",
+    challenges: "",
+    lessons: "",
+    performance: "",
+    security: "",
+    scalability: "",
+    roadmap: "",
     features: "",
     techStack: "",
     liveUrl: "",
@@ -29,6 +41,12 @@ const EMPTY = {
     featured: false,
     startDate: "",
     endDate: "",
+    seoTitle: "",
+    seoDescription: "",
+    seoKeywords: "",
+    canonicalUrl: "",
+    ogImage: "",
+    schema: "",
 };
 
 // ── Live preview card — matches portfolio exactly ─────────────────────
@@ -281,6 +299,29 @@ function ProjectForm({ initial = EMPTY, onSave, onCancel, loading }) {
                     </div>
                 </div>
 
+                <div className="grid grid-cols-2 gap-3">
+                    <div>
+                        <Label text="Slug" hint="Used for /projects/:slug" />
+                        <input
+                            value={form.slug || ""}
+                            onChange={(e) => set("slug", e.target.value)}
+                            className={inputClass}
+                            placeholder="portfolio-cms"
+                        />
+                    </div>
+                    <div>
+                        <Label text="Canonical URL" />
+                        <input
+                            value={form.canonicalUrl || ""}
+                            onChange={(e) =>
+                                set("canonicalUrl", e.target.value)
+                            }
+                            className={inputClass}
+                            placeholder="https://utkalbehera.com/projects/portfolio-cms"
+                        />
+                    </div>
+                </div>
+
                 <div>
                     <Label
                         text="One-line Tagline"
@@ -355,6 +396,48 @@ function ProjectForm({ initial = EMPTY, onSave, onCancel, loading }) {
                         onChange={(e) => set("techStack", e.target.value)}
                         className={inputClass}
                         placeholder="React, Node.js, MongoDB..."
+                    />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                    <div>
+                        <Label text="SEO Title" />
+                        <input
+                            value={form.seoTitle || ""}
+                            onChange={(e) => set("seoTitle", e.target.value)}
+                            className={inputClass}
+                            placeholder="Project title for search engines"
+                        />
+                    </div>
+                    <div>
+                        <Label text="SEO Keywords" />
+                        <input
+                            value={form.seoKeywords || ""}
+                            onChange={(e) => set("seoKeywords", e.target.value)}
+                            className={inputClass}
+                            placeholder="React, Node.js, SaaS"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <Label text="SEO Description" />
+                    <textarea
+                        value={form.seoDescription || ""}
+                        onChange={(e) => set("seoDescription", e.target.value)}
+                        rows={2}
+                        className={`${inputClass} resize-none`}
+                        placeholder="Short search description"
+                    />
+                </div>
+
+                <div>
+                    <Label text="OG Image" />
+                    <input
+                        value={form.ogImage || ""}
+                        onChange={(e) => set("ogImage", e.target.value)}
+                        className={inputClass}
+                        placeholder="https://..."
                     />
                 </div>
 

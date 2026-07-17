@@ -32,6 +32,7 @@ import ResumeManager from "../components/admin/ResumeManager.jsx";
 import CertificationManager from "../components/admin/CertificationManager.jsx";
 import EducationManager from "../components/admin/EducationManager.jsx";
 import SemesterManager from "../components/admin/SemesterManager.jsx";
+import BlogManager from "../components/admin/BlogManager.jsx";
 const NAV = [
     {
         to: "/admin",
@@ -70,6 +71,11 @@ const NAV = [
         to: "/admin/semesters",
         icon: <BookOpen size={17} />,
         label: "Semesters",
+    },
+    {
+        to: "/admin/blog",
+        icon: <BookOpen size={17} />,
+        label: "Blog",
     },
 ];
 
@@ -280,6 +286,7 @@ export default function AdminDashboard() {
                         <Route path="social" element={<SocialManager />} />
                         <Route path="resume" element={<ResumeManager />} />
                         <Route path="semesters" element={<SemesterManager />} />
+                        <Route path="blog" element={<BlogManager />} />
                     </Routes>
                 </main>
             </div>

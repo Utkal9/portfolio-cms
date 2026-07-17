@@ -65,6 +65,26 @@ const siteConfigSchema = new mongoose.Schema(
                 default: "Built with ❤️ using MERN Stack",
             },
         },
+        pages: {
+            aboutTitle: { type: String, default: "About" },
+            aboutBody: {
+                type: String,
+                default:
+                    "I build modern web platforms with a strong focus on performance, CMS-driven content, and developer experience.",
+            },
+            privacyTitle: { type: String, default: "Privacy Policy" },
+            privacyBody: {
+                type: String,
+                default:
+                    "This site respects your privacy and uses minimal analytics for performance insights.",
+            },
+            termsTitle: { type: String, default: "Terms" },
+            termsBody: {
+                type: String,
+                default:
+                    "Use of this site is subject to local laws and the stated terms of service.",
+            },
+        },
         seo: {
             title: {
                 type: String,
@@ -123,12 +143,25 @@ const siteConfigSchema = new mongoose.Schema(
 const projectSchema = new mongoose.Schema(
     {
         title: { type: String, required: true },
+        slug: { type: String, default: "" },
         description: { type: String, required: true },
-        tagline: { type: String, default: "" }, // ← ADD: one-line punchy description
-        problem: { type: String, default: "" }, // ← ADD: problem → solution statement
-        features: [{ type: String }], // ← ADD: feature bullet points
+        tagline: { type: String, default: "" },
+        problem: { type: String, default: "" },
+        businessValue: { type: String, default: "" },
+        architecture: { type: String, default: "" },
+        systemDesign: { type: String, default: "" },
+        databaseDesign: { type: String, default: "" },
+        apiFlow: { type: String, default: "" },
+        challenges: { type: String, default: "" },
+        lessons: { type: String, default: "" },
+        performance: { type: String, default: "" },
+        security: { type: String, default: "" },
+        scalability: { type: String, default: "" },
+        roadmap: { type: String, default: "" },
+        features: [{ type: String }],
         techStack: [{ type: String }],
         images: [{ url: String, publicId: String }],
+        screenshots: [{ url: String, publicId: String }],
         liveUrl: { type: String, default: "" },
         githubUrl: { type: String, default: "" },
         videoUrl: { type: String, default: "" },
@@ -138,6 +171,40 @@ const projectSchema = new mongoose.Schema(
         visible: { type: Boolean, default: true },
         startDate: { type: String },
         endDate: { type: String },
+        seoTitle: { type: String, default: "" },
+        seoDescription: { type: String, default: "" },
+        seoKeywords: { type: String, default: "" },
+        canonicalUrl: { type: String, default: "" },
+        ogImage: { type: String, default: "" },
+        schema: { type: String, default: "" },
+    },
+    { timestamps: true },
+);
+
+const blogSchema = new mongoose.Schema(
+    {
+        title: { type: String, required: true },
+        slug: { type: String, required: true, unique: true },
+        excerpt: { type: String, default: "" },
+        content: { type: String, default: "" },
+        status: {
+            type: String,
+            enum: ["draft", "published"],
+            default: "draft",
+        },
+        featured: { type: Boolean, default: false },
+        visible: { type: Boolean, default: true },
+        category: { type: String, default: "General" },
+        tags: [{ type: String }],
+        featuredImage: { type: String, default: "" },
+        author: { type: String, default: "Utkal Behera" },
+        readingTime: { type: Number, default: 4 },
+        publishedAt: { type: Date, default: null },
+        seoTitle: { type: String, default: "" },
+        seoDescription: { type: String, default: "" },
+        seoKeywords: { type: String, default: "" },
+        canonicalUrl: { type: String, default: "" },
+        ogImage: { type: String, default: "" },
     },
     { timestamps: true },
 );
@@ -282,3 +349,4 @@ export const SocialLink = mongoose.model("SocialLink", socialLinkSchema);
 export const Resume = mongoose.model("Resume", resumeSchema);
 export const Education = mongoose.model("Education", educationSchema);
 export const Semester = mongoose.model("Semester", semesterSchema);
+export const Blog = mongoose.model("Blog", blogSchema);

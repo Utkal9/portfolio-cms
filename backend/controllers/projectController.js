@@ -28,16 +28,36 @@ export const getAllProjects = async (req, res) => {
     }
 };
 
-// GET /api/projects/:id
+// GET /api/projects/:id-or-slug
 export const getProject = async (req, res) => {
     try {
-        const project = await Project.findById(req.params.id);
-        if (!project)
+        const identifier = req.params.id;
+        let project = null;
+
+        if (identifier && identifier.match(/^[0-9a-fA-F]{24}$/)) {
+            project = await Project.findOne({ _id: identifier, visible: true });
+        } else {
+            project = await Project.findOne({
+                slug: identifier,
+                visible: true,
+            });
+            if (!project) {
+                project = await Project.findOne({
+                    title: identifier,
+                    visible: true,
+                });
+            }
+        }
+
+        if (!project) {
             return res
                 .status(404)
                 .json({ success: false, message: "Not found" });
+        }
+
         res.json({ success: true, data: project });
     } catch (err) {
+        console.error("getProject error:", err);
         res.status(500).json({ success: false, message: err.message });
     }
 };
