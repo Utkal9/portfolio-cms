@@ -19,6 +19,7 @@ import siteConfigRoutes from "./routes/siteConfigRoutes.js";
 import educationRoutes from "./routes/educationRoutes.js";
 import certRoutes from "./routes/certRoutes.js";
 import semesterRoutes from "./routes/semesterRoutes.js";
+import sitemapRoutes from "./routes/sitemapRoutes.js";
 import { cache } from "./middleware/cacheMiddleware.js";
 const app = express();
 
@@ -75,6 +76,11 @@ app.use("/api/contact", contactRoutes);
 app.get("/api/health", (_, res) =>
     res.json({ status: "ok", time: new Date() }),
 );
+
+// ── Dynamic Sitemap ───────────────────────────────────────────────
+// Generates real-time XML sitemap including all visible projects
+// Cached for 1hr browser / 2hr CDN
+app.use("/api/sitemap", sitemapRoutes);
 
 // ── LeetCode GraphQL proxy ────────────────────────────────────────────
 app.get("/api/leetcode/:username", async (req, res) => {

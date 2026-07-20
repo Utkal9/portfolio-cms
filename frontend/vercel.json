@@ -1,5 +1,14 @@
 {
-    "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+    "rewrites": [
+        {
+            "source": "/sitemap.xml",
+            "destination": "/api/sitemap"
+        },
+        {
+            "source": "/((?!api/).*)",
+            "destination": "/"
+        }
+    ],
     "headers": [
         {
             "source": "(.*)",
