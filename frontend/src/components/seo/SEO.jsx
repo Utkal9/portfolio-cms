@@ -58,11 +58,19 @@ export default function SEO({
             <meta name="twitter:description" content={description} />
             <meta name="twitter:image" content={image} />
 
-            {/* Inject page-specific JSON-LD structured data */}
+
+            {/* Inject page-specific JSON-LD structured data.
+                schema can be a single object or an array of schema objects. */}
             {schema && (
-                <script type="application/ld+json">
-                    {JSON.stringify(schema)}
-                </script>
+                Array.isArray(schema) ? schema.map((s, i) => (
+                    <script key={i} type="application/ld+json">
+                        {JSON.stringify(s)}
+                    </script>
+                )) : (
+                    <script type="application/ld+json">
+                        {JSON.stringify(schema)}
+                    </script>
+                )
             )}
         </Helmet>
     );

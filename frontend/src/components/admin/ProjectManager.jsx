@@ -17,9 +17,15 @@ import { optimizeCloudinaryImage } from "../../utils/cloudinary.js";
 
 const EMPTY = {
     title: "",
+    slug: "",
     description: "",
     tagline: "",
     problem: "",
+    overview: "",
+    challenges: "",
+    learnings: "",
+    architecture: "",
+    metrics: "",
     features: "",
     techStack: "",
     liveUrl: "",
@@ -281,6 +287,27 @@ function ProjectForm({ initial = EMPTY, onSave, onCancel, loading }) {
                     </div>
                 </div>
 
+                {/* Slug */}
+                <div>
+                    <Label
+                        text="URL Slug"
+                        hint="Auto-generated from title. Edit to customise. e.g. my-project-name"
+                    />
+                    <input
+                        value={form.slug || ""}
+                        onChange={(e) =>
+                            set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))
+                        }
+                        className={inputClass}
+                        placeholder="auto-generated-from-title"
+                    />
+                    {form.slug && (
+                        <p className="text-[9px] text-slate-600 mt-1">
+                            URL: /projects/<span className="text-accent-blue">{form.slug}</span>
+                        </p>
+                    )}
+                </div>
+
                 <div>
                     <Label
                         text="One-line Tagline"
@@ -319,6 +346,86 @@ function ProjectForm({ initial = EMPTY, onSave, onCancel, loading }) {
                         rows={2}
                         className={`${inputClass} resize-none`}
                         placeholder="Problem → how your project solves it"
+                    />
+                </div>
+
+                {/* ── Detail page content ─────────────────────────── */}
+                <div className="pt-2 pb-1">
+                    <p className="text-[9px] text-accent-blue font-bold uppercase tracking-widest">
+                        📄 Project Detail Page Content
+                    </p>
+                    <p className="text-[9px] text-slate-600 mt-0.5">
+                        Fields below power the /projects/:slug landing page
+                    </p>
+                </div>
+
+                <div>
+                    <Label
+                        text="📋 Overview"
+                        hint="Extended description for the detail page"
+                    />
+                    <textarea
+                        value={form.overview || ""}
+                        onChange={(e) => set("overview", e.target.value)}
+                        rows={3}
+                        className={`${inputClass} resize-none`}
+                        placeholder="Full project overview shown on the detail page..."
+                    />
+                </div>
+
+                <div>
+                    <Label
+                        text="🏗 Architecture"
+                        hint="System design, tech decisions, patterns used"
+                    />
+                    <textarea
+                        value={form.architecture || ""}
+                        onChange={(e) => set("architecture", e.target.value)}
+                        rows={3}
+                        className={`${inputClass} resize-none`}
+                        placeholder="Frontend: React + Vite → Backend: Express REST API → DB: MongoDB Atlas..."
+                    />
+                </div>
+
+                <div>
+                    <Label
+                        text="⚡ Challenges Faced"
+                        hint="Technical problems you solved"
+                    />
+                    <textarea
+                        value={form.challenges || ""}
+                        onChange={(e) => set("challenges", e.target.value)}
+                        rows={3}
+                        className={`${inputClass} resize-none`}
+                        placeholder="Biggest challenge was X. Solved it by..."
+                    />
+                </div>
+
+                <div>
+                    <Label
+                        text="💡 Key Learnings"
+                        hint="What you learned or improved"
+                    />
+                    <textarea
+                        value={form.learnings || ""}
+                        onChange={(e) => set("learnings", e.target.value)}
+                        rows={3}
+                        className={`${inputClass} resize-none`}
+                        placeholder="Learned how to implement X at scale. Improved understanding of Y..."
+                    />
+                </div>
+
+                <div>
+                    <Label
+                        text="📊 Impact & Metrics"
+                        hint="Numbers, stats, user feedback"
+                    />
+                    <textarea
+                        value={form.metrics || ""}
+                        onChange={(e) => set("metrics", e.target.value)}
+                        rows={2}
+                        className={`${inputClass} resize-none`}
+                        placeholder="Reduced load time by 40%. Served 500+ users. 98 Lighthouse score..."
                     />
                 </div>
 

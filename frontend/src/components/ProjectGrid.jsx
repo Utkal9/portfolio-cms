@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     ExternalLink,
@@ -9,6 +10,7 @@ import {
     VolumeX,
     X,
     Code2,
+    ArrowRight,
 } from "lucide-react";
 import { useProjectStore } from "../store/index.js";
 import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
@@ -232,6 +234,18 @@ function ProjectCard({ project, onClick, index }) {
                             <Github size={11} /> Code
                         </a>
                     )}
+                    {/* Details page link — navigates to /projects/:slug */}
+                    <Link
+                        to={`/projects/${project.slug || project._id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center justify-center gap-1 px-3 py-2 rounded-xl
+                bg-white/5 border border-white/10 text-slate-400
+                text-[11px] font-bold hover:text-white hover:border-white/20
+                transition-colors"
+                        title="View project details"
+                    >
+                        <ArrowRight size={11} />
+                    </Link>
                     {hasVideo && (
                         <button
                             onClick={onClick}

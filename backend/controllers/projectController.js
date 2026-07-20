@@ -1,7 +1,40 @@
 import { Project } from "../models/index.js";
 import { uploadBuffer, deleteAsset } from "../config/cloudinary.js";
 
-// GET /api/projects  (public)
+// ── Slug utilities ─────────────────────────────────────────────────────────
+/**
+ * Convert a project title into an SEO-friendly slug.
+ * e.g. "My MERN App (2025)" → "my-mern-app-2025"
+ */
+function slugify(text) {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/[\s_]+/g, "-")       // spaces/underscores → hyphens
+        .replace(/[^\w-]+/g, "")       // remove non-word chars except hyphens
+        .replace(/--+/g, "-")          // collapse multiple hyphens
+        .replace(/^-+|-+$/g, "");      // trim leading/trailing hyphens
+}
+
+/**
+ * Ensure the slug is unique. If taken, append a short suffix.
+ * @param {string} base - The candidate slug
+ * @param {string|null} excludeId - MongoDB ID to exclude (for updates)
+ */
+async function uniqueSlug(base, excludeId = null) {
+    let slug = base;
+    let n = 1;
+    while (true) {
+        const query = { slug };
+        if (excludeId) query._id = { $ne: excludeId };
+        const exists = await Project.findOne(query).select("_id").lean();
+        if (!exists) return slug;
+        slug = `${base}-${n++}`;
+    }
+}
+
+// ── GET /api/projects  (public) ────────────────────────────────────────────
 export const getProjects = async (req, res) => {
     try {
         const { category, featured } = req.query;
@@ -18,7 +51,7 @@ export const getProjects = async (req, res) => {
     }
 };
 
-// GET /api/projects/all  (admin)
+// ── GET /api/projects/all  (admin) ─────────────────────────────────────────
 export const getAllProjects = async (req, res) => {
     try {
         const projects = await Project.find().sort({ order: 1, createdAt: -1 });
@@ -28,7 +61,24 @@ export const getAllProjects = async (req, res) => {
     }
 };
 
-// GET /api/projects/:id
+// ── GET /api/projects/slug/:slug  (public) ─────────────────────────────────
+export const getProjectBySlug = async (req, res) => {
+    try {
+        const project = await Project.findOne({
+            slug: req.params.slug.toLowerCase(),
+            visible: true,
+        }).populate("relatedProjects", "title slug tagline images category techStack liveUrl githubUrl");
+
+        if (!project)
+            return res.status(404).json({ success: false, message: "Project not found" });
+
+        res.json({ success: true, data: project });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+// ── GET /api/projects/:id ──────────────────────────────────────────────────
 export const getProject = async (req, res) => {
     try {
         const project = await Project.findById(req.params.id);
@@ -42,7 +92,7 @@ export const getProject = async (req, res) => {
     }
 };
 
-// POST /api/projects  (admin)
+// ── POST /api/projects  (admin) ────────────────────────────────────────────
 export const createProject = async (req, res) => {
     try {
         const images = [];
@@ -56,10 +106,20 @@ export const createProject = async (req, res) => {
             }
         }
         const techStack = parseTechStack(req.body.techStack);
+        const features = parseFeatures(req.body.features);
+
+        // Auto-generate slug from title if not provided
+        const baseSlug = req.body.slug
+            ? slugify(req.body.slug)
+            : slugify(req.body.title);
+        const slug = await uniqueSlug(baseSlug);
+
         const project = await Project.create({
             ...req.body,
             techStack,
+            features,
             images,
+            slug,
         });
         res.status(201).json({ success: true, data: project });
     } catch (err) {
@@ -67,7 +127,7 @@ export const createProject = async (req, res) => {
     }
 };
 
-// PUT /api/projects/:id  (admin)
+// ── PUT /api/projects/:id  (admin) ─────────────────────────────────────────
 export const updateProject = async (req, res) => {
     try {
         const updates = { ...req.body };
@@ -89,6 +149,14 @@ export const updateProject = async (req, res) => {
             updates.images = images;
         }
         updates.techStack = parseTechStack(updates.techStack);
+        updates.features = parseFeatures(updates.features);
+
+        // Regenerate slug if title changed and no explicit slug given
+        if (updates.title && !updates.slug) {
+            updates.slug = await uniqueSlug(slugify(updates.title), req.params.id);
+        } else if (updates.slug) {
+            updates.slug = await uniqueSlug(slugify(updates.slug), req.params.id);
+        }
 
         const project = await Project.findByIdAndUpdate(
             req.params.id,
@@ -105,7 +173,7 @@ export const updateProject = async (req, res) => {
     }
 };
 
-// DELETE /api/projects/:id  (admin)
+// ── DELETE /api/projects/:id  (admin) ──────────────────────────────────────
 export const deleteProject = async (req, res) => {
     try {
         const project = await Project.findById(req.params.id);
@@ -123,7 +191,7 @@ export const deleteProject = async (req, res) => {
     }
 };
 
-// PATCH /api/projects/reorder  (admin)
+// ── PATCH /api/projects/reorder  (admin) ───────────────────────────────────
 export const reorderProjects = async (req, res) => {
     try {
         const { orders } = req.body;
@@ -138,11 +206,21 @@ export const reorderProjects = async (req, res) => {
     }
 };
 
+// ── Helpers ────────────────────────────────────────────────────────────────
 function parseTechStack(raw) {
     if (!raw) return [];
     if (Array.isArray(raw)) return raw;
     return raw
         .split(",")
         .map((t) => t.trim())
+        .filter(Boolean);
+}
+
+function parseFeatures(raw) {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    return raw
+        .split(/[\n,]/)
+        .map((f) => f.trim())
         .filter(Boolean);
 }

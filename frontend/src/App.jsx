@@ -12,6 +12,7 @@ import { PageSkeleton } from "./components/ui/Skeleton.jsx";
 const Portfolio = lazy(() => import("./pages/Portfolio.jsx"));
 const Login = lazy(() => import("./pages/Login.jsx"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
+const ProjectDetail = lazy(() => import("./pages/ProjectDetail.jsx"));
 
 import ProtectedRoute from "./components/ui/ProtectedRoute.jsx";
 import GoogleAnalytics from "./components/analytics/GoogleAnalytics";
@@ -330,6 +331,12 @@ function AppInner() {
                 <Route
                     path="/*"
                     element={<LazyRoute component={Portfolio} />}
+                />
+
+                {/* Project detail pages — must come before the catch-all */}
+                <Route
+                    path="/projects/:slug"
+                    element={<LazyRoute component={ProjectDetail} />}
                 />
 
                 <Route

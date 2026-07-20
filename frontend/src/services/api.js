@@ -45,6 +45,7 @@ export const projectsAPI = {
     getAll: (params) => api.get("/projects", { params }),
     getAllAdmin: () => api.get("/projects/all"),
     getOne: (id) => api.get(`/projects/${id}`),
+    getBySlug: (slug) => api.get(`/projects/slug/${slug}`),
     create: (formData) =>
         api.post("/projects", formData, {
             headers: { "Content-Type": "multipart/form-data" },

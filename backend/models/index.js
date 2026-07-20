@@ -123,10 +123,18 @@ const siteConfigSchema = new mongoose.Schema(
 const projectSchema = new mongoose.Schema(
     {
         title: { type: String, required: true },
+        // SEO-friendly URL slug (auto-generated from title, editable by admin)
+        slug: { type: String, unique: true, sparse: true, lowercase: true, trim: true },
         description: { type: String, required: true },
-        tagline: { type: String, default: "" }, // ← ADD: one-line punchy description
-        problem: { type: String, default: "" }, // ← ADD: problem → solution statement
-        features: [{ type: String }], // ← ADD: feature bullet points
+        tagline: { type: String, default: "" }, // ← one-line punchy description
+        problem: { type: String, default: "" }, // ← problem → solution statement
+        // Rich detail fields for project landing pages (Phase 4)
+        overview: { type: String, default: "" },      // extended overview
+        challenges: { type: String, default: "" },    // technical challenges faced
+        learnings: { type: String, default: "" },     // key learnings
+        architecture: { type: String, default: "" },  // architecture notes
+        metrics: { type: String, default: "" },       // impact metrics / stats
+        features: [{ type: String }], // ← feature bullet points
         techStack: [{ type: String }],
         images: [{ url: String, publicId: String }],
         liveUrl: { type: String, default: "" },
@@ -138,9 +146,12 @@ const projectSchema = new mongoose.Schema(
         visible: { type: Boolean, default: true },
         startDate: { type: String },
         endDate: { type: String },
+        // Related projects for internal linking (stores project IDs)
+        relatedProjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }],
     },
     { timestamps: true },
 );
+
 
 // ── SKILL ────────────────────────────────────────────────────────────────────
 const skillSchema = new mongoose.Schema(
