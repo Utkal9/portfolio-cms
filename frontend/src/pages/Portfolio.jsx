@@ -1,23 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useSiteConfigStore } from "../store/index.js";
+import SEO from "../components/seo/SEO";
+import { SectionSkeleton } from "../components/ui/Skeleton.jsx";
+import ErrorBoundary from "../components/ui/ErrorBoundary.jsx";
+
+// ── Always-loaded sections (above the fold / lightweight) ─────────────
 import Navbar from "../components/Navbar.jsx";
 import Hero from "../components/Hero.jsx";
-import About from "../components/About.jsx";
-import SkillSection from "../components/SkillSection.jsx";
-import ProjectGrid from "../components/ProjectGrid.jsx";
-import ExperienceTimeline from "../components/ExperienceTimeline.jsx";
-import Certifications from "../components/Certifications.jsx";
-import Education from "../components/Education.jsx";
-import ContactSection from "../components/ContactSection.jsx";
 import Footer from "../components/Footer.jsx";
-import GithubStats from "../components/GithubStats.jsx";
-import LeetcodeStats from "../components/LeetcodeStats.jsx";
-import { lazy, Suspense } from "react";
-import SEO from "../components/seo/SEO";
-const CinematicIntro = lazy(() => import("../components/CinematicIntro.jsx"));
 
+// ── Lazy-loaded sections (below the fold / heavy) ─────────────────────
+// These are only downloaded when the browser reaches them.
+// Three.js (CinematicIntro) and chart-heavy components are excluded from
+// the main bundle, significantly reducing initial load time.
+const About = lazy(() => import("../components/About.jsx"));
+const SkillSection = lazy(() => import("../components/SkillSection.jsx"));
+const ProjectGrid = lazy(() => import("../components/ProjectGrid.jsx"));
+const ExperienceTimeline = lazy(() =>
+    import("../components/ExperienceTimeline.jsx"),
+);
+const Certifications = lazy(() => import("../components/Certifications.jsx"));
+const Education = lazy(() => import("../components/Education.jsx"));
+const ContactSection = lazy(() => import("../components/ContactSection.jsx"));
+const GithubStats = lazy(() => import("../components/GithubStats.jsx"));
+const LeetcodeStats = lazy(() => import("../components/LeetcodeStats.jsx"));
+const CinematicIntro = lazy(() =>
+    import("../components/CinematicIntro.jsx"),
+);
+
+// ── Section map — keys match siteConfig.sections / sectionOrder ────────
 const SECTION_MAP = {
-    hero: Hero,
+    hero: Hero,           // not lazy — above the fold
     about: About,
     skills: SkillSection,
     projects: ProjectGrid,
@@ -28,6 +41,9 @@ const SECTION_MAP = {
     leetcode: LeetcodeStats,
     contact: ContactSection,
 };
+
+// Non-lazy sections that should not be wrapped in Suspense
+const EAGER_SECTIONS = new Set(["hero"]);
 
 function applyTheme(config) {
     if (!config?.theme) return;
@@ -59,6 +75,7 @@ export default function Portfolio() {
     useEffect(() => {
         fetch();
     }, []);
+
     useEffect(() => {
         if (config) applyTheme(config);
     }, [config]);
@@ -77,9 +94,11 @@ export default function Portfolio() {
             <div className="min-h-screen bg-light-bg dark:bg-dark-bg transition-colors duration-300">
                 {/* Universe intro — shows once per session (lazy-loaded) */}
                 {showIntro && (
-                    <Suspense fallback={null}>
-                        <CinematicIntro onDone={handleIntroDone} />
-                    </Suspense>
+                    <ErrorBoundary fallback={null}>
+                        <Suspense fallback={null}>
+                            <CinematicIntro onDone={handleIntroDone} />
+                        </Suspense>
+                    </ErrorBoundary>
                 )}
 
                 <Navbar />
@@ -88,7 +107,36 @@ export default function Portfolio() {
                         if (visible[key] === false) return null;
                         const Section = SECTION_MAP[key];
                         if (!Section) return null;
-                        return <Section key={key} config={config} />;
+
+                        // Above-the-fold sections render eagerly (no Suspense)
+                        if (EAGER_SECTIONS.has(key)) {
+                            return <Section key={key} config={config} />;
+                        }
+
+                        // Below-the-fold sections: wrap in ErrorBoundary + Suspense
+                        // so a single section failure never crashes the whole page
+                        return (
+                            <ErrorBoundary
+                                key={key}
+                                fallback={(err, reset) => (
+                                    <div className="py-8 text-center text-gray-500 text-sm">
+                                        <p>Could not load this section.</p>
+                                        <button
+                                            onClick={reset}
+                                            className="mt-2 underline text-blue-400 hover:text-blue-300"
+                                        >
+                                            Retry
+                                        </button>
+                                    </div>
+                                )}
+                            >
+                                <Suspense
+                                    fallback={<SectionSkeleton rows={3} />}
+                                >
+                                    <Section config={config} />
+                                </Suspense>
+                            </ErrorBoundary>
+                        );
                     })}
                 </main>
                 <Footer config={config} />

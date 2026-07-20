@@ -19,6 +19,7 @@ import siteConfigRoutes from "./routes/siteConfigRoutes.js";
 import educationRoutes from "./routes/educationRoutes.js";
 import certRoutes from "./routes/certRoutes.js";
 import semesterRoutes from "./routes/semesterRoutes.js";
+import { cache } from "./middleware/cacheMiddleware.js";
 const app = express();
 
 // ── CORS — allow all vercel + localhost ───────────────────────────────
@@ -51,18 +52,25 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 // ── Routes ────────────────────────────────────────────────────────────
+// Auth — no cache (JWT operations)
 app.use("/api/auth", authRoutes);
-app.use("/api/projects", projectRoutes);
-app.use("/api/skills", skillRoutes);
-app.use("/api/experience", experienceRoutes);
-app.use("/api/contact", contactRoutes);
+
+// Public content — 5 min browser cache, 10 min CDN cache
+app.use("/api/projects", cache(300), projectRoutes);
+app.use("/api/skills", cache(300), skillRoutes);
+app.use("/api/site-config", cache(300), siteConfigRoutes);
+app.use("/api/social", cache(300), socialRoutes);
+app.use("/api/education", cache(300), educationRoutes);
+app.use("/api/gallery/certs", cache(300), certRoutes);
+app.use("/api/semesters", cache(300), semesterRoutes);
+
+// Mixed — has public reads and admin mutations (middleware handles per-method)
+app.use("/api/experience", cache(300), experienceRoutes);
+app.use("/api/gallery", cache(300), galleryRoutes);
 app.use("/api/resume", resumeRoutes);
-app.use("/api/gallery", galleryRoutes);
-app.use("/api/social", socialRoutes);
-app.use("/api/site-config", siteConfigRoutes);
-app.use("/api/education", educationRoutes);
-app.use("/api/gallery/certs", certRoutes);
-app.use("/api/semesters", semesterRoutes);
+
+// Contact — no cache (form submissions + admin reads)
+app.use("/api/contact", contactRoutes);
 // ── Health check ──────────────────────────────────────────────────────
 app.get("/api/health", (_, res) =>
     res.json({ status: "ok", time: new Date() }),
