@@ -5,6 +5,9 @@ backend/node_modules/
 
 # Env secrets
 .env
+frontend/.env.local
+frontend/.env.production
+
 
 # Build files
 dist/
