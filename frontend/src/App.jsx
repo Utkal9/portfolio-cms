@@ -269,12 +269,8 @@ function PageTransition({ children }) {
     );
 }
 
-// ── Lazy page wrapper ────────────────────────────────────────────────
-// Each route gets its own Suspense + ErrorBoundary.
-// This ensures:
-// 1. A skeleton is shown only for the loading route, not the whole app
-// 2. AnimatePresence only triggers AFTER the chunk is resolved
-// 3. An error in one route doesn't crash the entire app
+// ── Lazy page wrapper (WITH page transition) ──────────────────────
+// Used for public pages (Portfolio, Login) — animates on route change.
 function LazyRoute({ component: Component }) {
     return (
         <ErrorBoundary>
@@ -282,6 +278,22 @@ function LazyRoute({ component: Component }) {
                 <PageTransition>
                     <Component />
                 </PageTransition>
+            </Suspense>
+        </ErrorBoundary>
+    );
+}
+
+// ── Lazy page wrapper (WITHOUT page transition) ────────────────────
+// Used for AdminDashboard, which has its OWN internal <Routes>.
+// PageTransition was keyed on location.pathname, so every admin sidebar
+// click (/admin/experience → /admin/education) triggered AnimatePresence
+// mode="wait" to exit-animate the ENTIRE dashboard shell, producing a
+// blank white screen between every panel navigation.
+function LazyRouteNoTransition({ component: Component }) {
+    return (
+        <ErrorBoundary>
+            <Suspense fallback={<PageSkeleton />}>
+                <Component />
             </Suspense>
         </ErrorBoundary>
     );
@@ -325,11 +337,18 @@ function AppInner() {
                     element={<LazyRoute component={Login} />}
                 />
 
+                {/*
+                 * AdminDashboard gets LazyRouteStatic (NO PageTransition).
+                 * The dashboard has its own internal <Routes> for sub-panels.
+                 * Using PageTransition here caused AnimatePresence mode="wait"
+                 * to exit-animate the whole shell on every sidebar nav click,
+                 * producing a blank screen between every admin panel.
+                 */}
                 <Route
                     path="/admin/*"
                     element={
                         <ProtectedRoute>
-                            <LazyRoute component={AdminDashboard} />
+                            <LazyRouteNoTransition component={AdminDashboard} />
                         </ProtectedRoute>
                     }
                 />
