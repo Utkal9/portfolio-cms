@@ -257,6 +257,24 @@ Cloudinary is used for
 
 ---
 
+## ⚡ Performance Optimizations
+
+- Route-based Code Splitting (React Lazy & Suspense)
+- Optimized Asset Loading & Image Transformations via Cloudinary (Responsive `srcSets`)
+- Backend API Caching (Edge cache headers for public data)
+- Reduced Core Web Vitals (LCP/CLS) using preconnects and deferred scripts
+
+---
+
+## 🔍 Search Engine Optimization (SEO)
+
+- Dynamic XML Sitemap Generation (`/api/sitemap.xml`)
+- Auto-generated SEO-friendly URL slugs for Projects
+- Dynamic Meta Tags (Open Graph, Twitter Cards) via React Helmet Async
+- Injected JSON-LD Structured Data (e.g. `SoftwareApplication` & `BreadcrumbList` schemas)
+
+---
+
 # 🛠 Tech Stack
 
 ## 🎨 Frontend
@@ -641,11 +659,12 @@ Complete CRUD operations
 - Add Project
 - Edit Project
 - Delete Project
-- Upload Thumbnail
-- Project Description
-- Technologies Used
+- Upload Hero Image Gallery & Video Demos
+- Project Description & Rich Fields (Architecture, Metrics, Learnings)
+- Technologies Used & Key Features
 - Live Demo URL
 - GitHub URL
+- Auto-generated URL Slugs
 - Featured Project Toggle
 
 ---
@@ -777,10 +796,20 @@ The backend follows a RESTful architecture.
 
 | Method | Endpoint            |
 | ------ | ------------------- |
-| GET    | `/api/projects`     |
-| POST   | `/api/projects`     |
-| PUT    | `/api/projects/:id` |
-| DELETE | `/api/projects/:id` |
+| GET    | `/api/projects`          | Get all visible projects    |
+| GET    | `/api/projects/slug/:id` | Get project by URL slug     |
+| GET    | `/api/projects/all`      | Get all projects (Admin)    |
+| POST   | `/api/projects`          | Create project              |
+| PUT    | `/api/projects/:id`      | Update project              |
+| DELETE | `/api/projects/:id`      | Delete project              |
+
+---
+
+## SEO & Sitemap
+
+| Method | Endpoint          | Description               |
+| ------ | ----------------- | ------------------------- |
+| GET    | `/api/sitemap`    | Generates dynamic sitemap |
 
 ---
 
