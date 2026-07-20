@@ -96,12 +96,15 @@
             content="https://utkalbehera.com/og-image.png"
         />
 
-        <!-- Performance -->
+        <!-- Performance: DNS prefetch & preconnect -->
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="//res.cloudinary.com" />
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
 
         <!-- Structured Data : Person -->
         <script type="application/ld+json">
@@ -160,19 +163,12 @@
             }
             }
         </script>
-        <!-- Google tag (gtag.js) -->
-        <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-2K62JL06X3"
-        ></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            window.gtag = gtag;
-            gtag('js', new Date());
-
-            gtag('config', 'G-2K62JL06X3');
-        </script>
+        <!--
+          GA4 is managed by the GoogleAnalytics React component (react-ga4).
+          The inline gtag script was removed to prevent double page-view firing.
+          window.gtag is still set by the react-ga4 component so ErrorBoundary
+          reporting and custom event tracking continue to work correctly.
+        -->
     </head>
 
     <body>

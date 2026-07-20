@@ -1,5 +1,10 @@
 User-agent: *
-
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin/login
+
+# Block all API endpoints from crawlers
+Disallow: /api/
 
 Sitemap: https://utkalbehera.com/sitemap.xml

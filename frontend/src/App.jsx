@@ -3,10 +3,16 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { useThemeStore } from "./store/index.js";
+import ErrorBoundary from "./components/ui/ErrorBoundary.jsx";
+import { PageSkeleton } from "./components/ui/Skeleton.jsx";
 
+// ── Lazy pages ────────────────────────────────────────────────────────
+// Each page gets its OWN Suspense so AnimatePresence never races with
+// a chunk that hasn't loaded yet. This was the root cause of blank screens.
 const Portfolio = lazy(() => import("./pages/Portfolio.jsx"));
 const Login = lazy(() => import("./pages/Login.jsx"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
+
 import ProtectedRoute from "./components/ui/ProtectedRoute.jsx";
 import GoogleAnalytics from "./components/analytics/GoogleAnalytics";
 import Clarity from "./components/analytics/Clarity";
@@ -212,6 +218,7 @@ function ParticleCursor() {
         <canvas
             ref={canvasRef}
             className="hidden md:block"
+            aria-hidden="true"
             style={{
                 position: "fixed",
                 top: 0,
@@ -237,10 +244,14 @@ function ScrollProgress() {
         window.addEventListener("scroll", fn, { passive: true });
         return () => window.removeEventListener("scroll", fn);
     }, []);
-    return <div ref={barRef} className="scroll-progress" />;
+    return <div ref={barRef} className="scroll-progress" aria-hidden="true" />;
 }
 
 // ── Page Transition ──────────────────────────────────────────────────
+// IMPORTANT: PageTransition now wraps RESOLVED content only.
+// The Suspense fallback is NOT inside AnimatePresence — that was the
+// root cause of blank screens (exit animation removed content before
+// the incoming lazy chunk had loaded and mounted).
 function PageTransition({ children }) {
     const location = useLocation();
     return (
@@ -258,11 +269,30 @@ function PageTransition({ children }) {
     );
 }
 
+// ── Lazy page wrapper ────────────────────────────────────────────────
+// Each route gets its own Suspense + ErrorBoundary.
+// This ensures:
+// 1. A skeleton is shown only for the loading route, not the whole app
+// 2. AnimatePresence only triggers AFTER the chunk is resolved
+// 3. An error in one route doesn't crash the entire app
+function LazyRoute({ component: Component }) {
+    return (
+        <ErrorBoundary>
+            <Suspense fallback={<PageSkeleton />}>
+                <PageTransition>
+                    <Component />
+                </PageTransition>
+            </Suspense>
+        </ErrorBoundary>
+    );
+}
+
 function AppInner() {
     const { init } = useThemeStore();
     useEffect(() => {
         init();
     }, []);
+
     return (
         <>
             <GoogleAnalytics />
@@ -277,30 +307,33 @@ function AppInner() {
                     style: { fontFamily: "DM Sans, sans-serif" },
                 }}
             />
-            <Suspense
-                fallback={
-                    <div className="flex items-center justify-center min-h-screen bg-[#0B1120] text-white">
-                        Loading...
-                    </div>
-                }
-            >
-                <PageTransition>
-                    <Routes>
-                        <Route path="/*" element={<Portfolio />} />
 
-                        <Route path="/admin/login" element={<Login />} />
+            {/*
+             * Routes no longer share a single Suspense.
+             * Each route renders its own <LazyRoute> which has:
+             *   ErrorBoundary → Suspense(PageSkeleton) → PageTransition → Page
+             * This eliminates the blank white screen race condition entirely.
+             */}
+            <Routes>
+                <Route
+                    path="/*"
+                    element={<LazyRoute component={Portfolio} />}
+                />
 
-                        <Route
-                            path="/admin/*"
-                            element={
-                                <ProtectedRoute>
-                                    <AdminDashboard />
-                                </ProtectedRoute>
-                            }
-                        />
-                    </Routes>
-                </PageTransition>
-            </Suspense>
+                <Route
+                    path="/admin/login"
+                    element={<LazyRoute component={Login} />}
+                />
+
+                <Route
+                    path="/admin/*"
+                    element={
+                        <ProtectedRoute>
+                            <LazyRoute component={AdminDashboard} />
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
         </>
     );
 }
