@@ -217,9 +217,15 @@ function ProjectForm({ initial = EMPTY, onSave, onCancel, loading }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const fd = new FormData();
-        Object.entries(form).forEach(([k, v]) => {
-            if (!["images", "videoUrl", "features", "techStack"].includes(k))
-                fd.append(k, v);
+        // Only append fields that are explicitly defined in our form state (EMPTY)
+        // This prevents sending internal MongoDB fields (like _id, relatedProjects, etc.)
+        // which can cause CastErrors on the backend.
+        Object.keys(EMPTY).forEach((k) => {
+            if (!["images", "videoUrl", "features", "techStack"].includes(k)) {
+                if (form[k] !== undefined) {
+                    fd.append(k, form[k]);
+                }
+            }
         });
         (form.techStack || "")
             .split(",")
