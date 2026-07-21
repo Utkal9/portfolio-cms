@@ -20,6 +20,7 @@ import educationRoutes from "./routes/educationRoutes.js";
 import certRoutes from "./routes/certRoutes.js";
 import semesterRoutes from "./routes/semesterRoutes.js";
 import sitemapRoutes from "./routes/sitemapRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
 import { cache } from "./middleware/cacheMiddleware.js";
 const app = express();
 
@@ -81,6 +82,9 @@ app.get("/api/health", (_, res) =>
 // Generates real-time XML sitemap including all visible projects
 // Cached for 1hr browser / 2hr CDN
 app.use("/api/sitemap", sitemapRoutes);
+
+// Blog (public posts: 2 min cache; admin writes: no cache middleware — auth middleware handles it)
+app.use("/api/blog", cache(120), blogRoutes);
 
 // ── LeetCode GraphQL proxy ────────────────────────────────────────────
 app.get("/api/leetcode/:username", async (req, res) => {
