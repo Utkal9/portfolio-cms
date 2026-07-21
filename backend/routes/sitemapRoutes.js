@@ -2,21 +2,22 @@
  * Sitemap Route — dynamically generates XML sitemap.
  *
  * Includes:
- * - Static pages (homepage, etc.)
- * - All visible public projects (by slug or ID, updated as projects are added)
- * - All published blog posts (future: will auto-populate once blog is live)
+ * - Static pages (homepage, blog index)
+ * - All visible public projects (by slug)
+ * - All published blog posts (by slug)
  *
  * Served at GET /api/sitemap
  * Vercel rewrite in vercel.json maps /sitemap.xml → /api/sitemap
  */
 import express from "express";
-import { Project } from "../models/index.js";
+import { Project, BlogPost } from "../models/index.js";
 
 const router = express.Router();
 
 const DOMAIN = "https://utkalbehera.com";
 const STATIC_PAGES = [
     { url: "/", changefreq: "weekly", priority: "1.0" },
+    { url: "/blog", changefreq: "daily", priority: "0.9" },
 ];
 
 function escapeXml(unsafe) {
@@ -45,10 +46,11 @@ function buildUrlEntry({ loc, lastmod, changefreq = "monthly", priority = "0.7" 
 
 router.get("/", async (req, res) => {
     try {
-        // Fetch all visible projects
-        const projects = await Project.find({ visible: true })
-            .select("slug title updatedAt _id")
-            .lean();
+        // Fetch all visible projects and published blog posts in parallel
+        const [projects, posts] = await Promise.all([
+            Project.find({ visible: true }).select("slug updatedAt _id").lean(),
+            BlogPost.find({ status: "published" }).select("slug updatedAt publishedAt").lean(),
+        ]);
 
         const staticEntries = STATIC_PAGES.map((p) =>
             buildUrlEntry({
@@ -60,10 +62,7 @@ router.get("/", async (req, res) => {
         );
 
         const projectEntries = projects.map((p) => {
-            // Use slug if available (Phase 4), otherwise fall back to MongoDB ID
-            const path = p.slug
-                ? `/projects/${escapeXml(p.slug)}`
-                : `/projects/${p._id}`;
+            const path = p.slug ? `/projects/${escapeXml(p.slug)}` : `/projects/${p._id}`;
             return buildUrlEntry({
                 loc: `${DOMAIN}${path}`,
                 lastmod: toIsoDate(p.updatedAt),
@@ -72,6 +71,15 @@ router.get("/", async (req, res) => {
             });
         });
 
+        const blogEntries = posts.map((p) =>
+            buildUrlEntry({
+                loc: `${DOMAIN}/blog/${escapeXml(p.slug)}`,
+                lastmod: toIsoDate(p.updatedAt),
+                changefreq: "weekly",
+                priority: "0.7",
+            }),
+        );
+
         const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -79,9 +87,9 @@ router.get("/", async (req, res) => {
           http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 ${staticEntries.join("")}
 ${projectEntries.join("")}
+${blogEntries.join("")}
 </urlset>`;
 
-        // Cache for 1 hour at CDN/browser level
         res.setHeader("Content-Type", "application/xml; charset=utf-8");
         res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=7200");
         res.send(xml);

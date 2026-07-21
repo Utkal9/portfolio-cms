@@ -293,3 +293,76 @@ export const SocialLink = mongoose.model("SocialLink", socialLinkSchema);
 export const Resume = mongoose.model("Resume", resumeSchema);
 export const Education = mongoose.model("Education", educationSchema);
 export const Semester = mongoose.model("Semester", semesterSchema);
+
+// ── BLOG ──────────────────────────────────────────────────────────────────────
+const blogCategorySchema = new mongoose.Schema(
+    {
+        name: { type: String, required: true, trim: true },
+        slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+        description: { type: String, default: "" },
+        color: { type: String, default: "#6366f1" }, // accent colour for UI
+    },
+    { timestamps: true },
+);
+
+const blogTagSchema = new mongoose.Schema(
+    {
+        name: { type: String, required: true, trim: true },
+        slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    },
+    { timestamps: true },
+);
+
+const blogPostSchema = new mongoose.Schema(
+    {
+        title: { type: String, required: true, trim: true },
+        slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+        excerpt: { type: String, default: "", maxlength: 300 }, // short summary for cards / meta
+        content: { type: String, default: "" },                 // rich-text HTML from editor
+        featuredImage: { url: String, publicId: String },
+        author: { type: String, default: "Utkal Behera" },
+        category: { type: mongoose.Schema.Types.ObjectId, ref: "BlogCategory" },
+        tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "BlogTag" }],
+
+        // SEO fields (admin-editable)
+        seoTitle: { type: String, default: "" },
+        seoDescription: { type: String, default: "" },
+        ogImage: { type: String, default: "" },    // URL override for OG image
+        canonical: { type: String, default: "" },  // canonical URL if syndicating
+
+        // Publishing
+        status: {
+            type: String,
+            enum: ["draft", "published", "scheduled"],
+            default: "draft",
+        },
+        publishedAt: { type: Date },
+        scheduledAt: { type: Date },
+
+        // Engagement
+        readingTime: { type: Number, default: 0 }, // minutes, auto-computed
+        views: { type: Number, default: 0 },
+
+        // Internal linking
+        relatedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "BlogPost" }],
+    },
+    { timestamps: true },
+);
+
+// Auto-compute reading time before save (200 wpm average)
+blogPostSchema.pre("save", function (next) {
+    if (this.content) {
+        const words = this.content.replace(/<[^>]+>/g, " ").trim().split(/\s+/).length;
+        this.readingTime = Math.max(1, Math.ceil(words / 200));
+    }
+    // Set publishedAt when status transitions to published
+    if (this.isModified("status") && this.status === "published" && !this.publishedAt) {
+        this.publishedAt = new Date();
+    }
+    next();
+});
+
+export const BlogCategory = mongoose.model("BlogCategory", blogCategorySchema);
+export const BlogTag = mongoose.model("BlogTag", blogTagSchema);
+export const BlogPost = mongoose.model("BlogPost", blogPostSchema);
+

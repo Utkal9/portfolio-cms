@@ -153,4 +153,34 @@ export const semesterAPI = {
     update: (id, data) => api.put(`/semesters/${id}`, data),
     delete: (id) => api.delete(`/semesters/${id}`),
 };
+
+// ── Blog ─────────────────────────────────────────────────────────────
+export const blogAPI = {
+    // Public
+    getPosts: (params) => api.get("/blog", { params }),
+    getPost: (slug) => api.get(`/blog/${slug}`),
+    getCategories: () => api.get("/blog/categories"),
+    getTags: () => api.get("/blog/tags"),
+    // Admin
+    getAllAdmin: () => api.get("/blog/admin/all"),
+    getByIdAdmin: (id) => api.get(`/blog/admin/${id}`),
+    create: (formData) =>
+        api.post("/blog", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        }),
+    update: (id, formData) =>
+        api.put(`/blog/${id}`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        }),
+    delete: (id) => api.delete(`/blog/${id}`),
+    // Categories admin
+    createCategory: (data) => api.post("/blog/categories", data),
+    updateCategory: (id, data) => api.put(`/blog/categories/${id}`, data),
+    deleteCategory: (id) => api.delete(`/blog/categories/${id}`),
+    // Tags admin
+    createTag: (data) => api.post("/blog/tags", data),
+    deleteTag: (id) => api.delete(`/blog/tags/${id}`),
+};
+
 export default api;
+
