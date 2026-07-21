@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon, Sun, Menu, X } from "lucide-react";
+import { Moon, Sun, Menu, X, BookOpen } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useThemeStore, useSiteConfigStore } from "../store/index.js";
 
 const NAV_ITEMS = [
@@ -109,6 +110,14 @@ export default function Navbar() {
                             )}
                         </a>
                     ))}
+                    {/* Blog — page link */}
+                    <Link
+                        to="/blog"
+                        className="relative px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5
+                text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200"
+                    >
+                        <BookOpen size={13} /> Blog
+                    </Link>
                 </div>
 
                 {/* Right controls */}
@@ -195,6 +204,15 @@ export default function Navbar() {
                                     {item.label}
                                 </a>
                             ))}
+                            {/* Blog mobile link */}
+                            <Link
+                                to="/blog"
+                                onClick={() => setMenuOpen(false)}
+                                className="flex items-center gap-2 py-3 px-4 rounded-xl text-sm font-medium
+                  text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-dark-card2 transition-colors"
+                            >
+                                <BookOpen size={14} /> Blog
+                            </Link>
                             <a
                                 href="#contact"
                                 onClick={() => setMenuOpen(false)}
