@@ -25,6 +25,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 import { useSiteConfigStore } from "../store/index.js";
+import { useAnalytics } from "../hooks/useAnalytics.js";
 
 // ── Result card types ────────────────────────────────────────────────
 function ProjectCard({ item, query }) {
@@ -205,6 +206,7 @@ function SkeletonCard() {
 export default function Search() {
     const [searchParams, setSearchParams] = useSearchParams();
     const { config, fetch: fetchConfig } = useSiteConfigStore();
+    const { trackSearch } = useAnalytics();
 
     const [query, setQuery] = useState(searchParams.get("q") || "");
     const [loading, setLoading] = useState(true);
@@ -239,7 +241,22 @@ export default function Search() {
         } else {
             setSearchParams({}, { replace: true });
         }
-    }, [setSearchParams]);
+        // Fire GA4 event after a short delay (debounce)
+        if (val.trim().length > 2) {
+            clearTimeout(window.__searchTrackTimer);
+            window.__searchTrackTimer = setTimeout(() => {
+                const projMatches = allProjects.filter((p) =>
+                    [p.title, p.description, p.category, ...(p.techStack || [])]
+                        .join(" ").toLowerCase().includes(val.toLowerCase())
+                ).length;
+                const postMatches = allPosts.filter((p) =>
+                    [p.title, p.excerpt, p.category?.name]
+                        .join(" ").toLowerCase().includes(val.toLowerCase())
+                ).length;
+                trackSearch(val, projMatches + postMatches);
+            }, 1000);
+        }
+    }, [setSearchParams, allProjects, allPosts, trackSearch]);
 
     // ── Filter results ────────────────────────────────────────────────
     const q = query.trim().toLowerCase();

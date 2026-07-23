@@ -18,6 +18,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 import { useSiteConfigStore } from "../store/index.js";
+import { useAnalytics } from "../hooks/useAnalytics.js";
 
 // ── Helpers ───────────────────────────────────────────────────────────
 function fmtDate(d) {
@@ -77,6 +78,7 @@ export default function BlogPost() {
     const { slug } = useParams();
     const navigate = useNavigate();
     const { config, fetch: fetchConfig } = useSiteConfigStore();
+    const { trackBlogRead } = useAnalytics();
 
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -95,6 +97,7 @@ export default function BlogPost() {
             .then(({ data }) => {
                 setPost(data.data);
                 setLoading(false);
+                trackBlogRead(data.data);
             })
             .catch((err) => {
                 setError(err?.response?.status === 404 ? "not-found" : "error");
