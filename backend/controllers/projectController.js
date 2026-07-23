@@ -224,3 +224,24 @@ function parseFeatures(raw) {
         .map((f) => f.trim())
         .filter(Boolean);
 }
+
+// ── POST /api/projects/migrate-slugs  (admin) ──────────────────────────────
+// One-time migration: generates slugs for all projects that don't have one.
+// Safe to call multiple times — only touches documents where slug is missing.
+export const migrateSlugs = async (req, res) => {
+    try {
+        const projects = await Project.find({ $or: [{ slug: null }, { slug: "" }, { slug: { $exists: false } }] }).select("_id title");
+
+        let migrated = 0;
+        for (const p of projects) {
+            const base = slugify(p.title || `project-${p._id}`);
+            const slug = await uniqueSlug(base, p._id.toString());
+            await Project.findByIdAndUpdate(p._id, { slug });
+            migrated++;
+        }
+
+        res.json({ success: true, message: `Migrated ${migrated} projects`, migrated });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};

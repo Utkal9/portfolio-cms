@@ -123,12 +123,19 @@ export default function ProjectDetail() {
     }, []);
 
     useEffect(() => {
+        if (!slug) return;           // guard — never call with undefined
         setLoading(true);
         setError(null);
         setActiveImage(0);
 
-        projectsAPI
-            .getBySlug(slug)
+        // MongoDB ObjectId = exactly 24 hex chars
+        const isObjectId = /^[a-f\d]{24}$/i.test(slug);
+
+        const fetchFn = isObjectId
+            ? projectsAPI.getOne(slug)         // legacy: linked by _id
+            : projectsAPI.getBySlug(slug);     // modern: linked by slug
+
+        fetchFn
             .then(({ data }) => {
                 setProject(data.data);
                 setLoading(false);
@@ -142,6 +149,7 @@ export default function ProjectDetail() {
                 setLoading(false);
             });
     }, [slug]);
+
 
     const handleShare = async () => {
         const url = window.location.href;
