@@ -95,7 +95,7 @@ export default function AvatarCard({ profileImage }) {
                             alt="Utkal Behera"
                             loading="eager"
                             decoding="async"
-                            fetchPriority="high"
+                            fetchpriority="high"
                             width={800}
                             height={800}
                             style={{
