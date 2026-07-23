@@ -252,20 +252,20 @@ function ScrollProgress() {
 }
 
 // ── Page Transition ──────────────────────────────────────────────────
-// IMPORTANT: PageTransition now wraps RESOLVED content only.
-// The Suspense fallback is NOT inside AnimatePresence — that was the
-// root cause of blank screens (exit animation removed content before
-// the incoming lazy chunk had loaded and mounted).
+// IMPORTANT: mode="sync" lets the new page fade IN at the same time the
+// old page fades OUT. mode="wait" held a blank gap between exit+entry
+// whenever the lazy chunk was still loading when the exit finished.
 function PageTransition({ children }) {
     const location = useLocation();
     return (
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
             <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18, ease: "easeInOut" }}
+                style={{ willChange: "opacity" }}
             >
                 {children}
             </motion.div>

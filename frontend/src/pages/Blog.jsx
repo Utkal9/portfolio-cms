@@ -176,8 +176,15 @@ export default function Blog() {
     const [pagination, setPagination] = useState(null);
 
     useEffect(() => {
+        let cancelled = false;
         if (!config) fetchConfig();
-        blogAPI.getCategories().then(({ data }) => setCategories(data.data || []));
+        blogAPI
+            .getCategories()
+            .then(({ data }) => {
+                if (!cancelled) setCategories(data.data || []);
+            })
+            .catch(() => {}); // silently ignore on unmount
+        return () => { cancelled = true; };
     }, []);
 
     // Debounce search input
@@ -186,21 +193,25 @@ export default function Blog() {
         return () => clearTimeout(t);
     }, [search]);
 
-    // Fetch posts when params change
+    // Fetch posts when params change — guarded against unmount
     const fetchPosts = useCallback(async () => {
         setLoading(true);
+        let cancelled = false;
         try {
             const params = { page, limit: 9 };
             if (activeCategory) params.category = activeCategory;
             if (searchDebounced) params.q = searchDebounced;
             const { data } = await blogAPI.getPosts(params);
-            setPosts(data.data || []);
-            setPagination(data.pagination);
+            if (!cancelled) {
+                setPosts(data.data || []);
+                setPagination(data.pagination);
+            }
         } catch {
-            setPosts([]);
+            if (!cancelled) setPosts([]);
         } finally {
-            setLoading(false);
+            if (!cancelled) setLoading(false);
         }
+        return () => { cancelled = true; };
     }, [page, activeCategory, searchDebounced]);
 
     useEffect(() => {
@@ -210,6 +221,7 @@ export default function Blog() {
     useEffect(() => {
         fetchPosts();
     }, [fetchPosts]);
+
 
     const featured = posts[0];
     const rest = posts.slice(1);
