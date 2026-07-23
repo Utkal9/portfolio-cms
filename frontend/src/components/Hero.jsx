@@ -25,6 +25,7 @@ const HeroBackground = lazy(() => import("./HeroBackground"));
 const VideoCVModal = lazy(() => import("./VideoCVModal"));
 import AvatarCard from "./AvatarCard";
 import { resumeAPI } from "../services/api.js";
+import { useAnalytics } from "../hooks/useAnalytics.js";
 
 const DEFAULT_VIDEO_ID = "1NEe4Yi660D3P5eLqGm04MXYtb_MLHv_r";
 const LC_USERNAME = "utkal59";
@@ -194,6 +195,7 @@ const item = {
 // ── Main Hero ─────────────────────────────────────────────────────────
 export default function Hero({ config }) {
     const hero = config?.hero || {};
+    const { trackResumeDownload } = useAnalytics();
     const videoSource = parseVideoSource(hero.videoCV || "") || {
         type: "drive",
         id: DEFAULT_VIDEO_ID,
@@ -510,6 +512,7 @@ export default function Hero({ config }) {
                                 href={resumeAPI.download()}
                                 target="_blank"
                                 rel="noreferrer"
+                                onClick={trackResumeDownload}
                                 whileHover={{ scale: 1.04, y: -2 }}
                                 whileTap={{ scale: 0.97 }}
                                 className="flex items-center gap-2.5 px-7 py-3.5 rounded-2xl

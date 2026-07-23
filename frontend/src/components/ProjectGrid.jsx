@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useProjectStore } from "../store/index.js";
 import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
+import { useAnalytics } from "../hooks/useAnalytics.js";
 function getEmbedUrl(url, muted = true) {
     if (!url) return null;
     const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
@@ -237,7 +238,7 @@ function ProjectCard({ project, onClick, index }) {
                     {/* Details page link — navigates to /projects/:slug */}
                     <Link
                         to={`/projects/${project.slug || project._id}`}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => { e.stopPropagation(); trackProjectClick(project); }}
                         className="flex items-center justify-center gap-1 px-3 py-2 rounded-xl
                 bg-white/5 border border-white/10 text-slate-400
                 text-[11px] font-bold hover:text-white hover:border-white/20
@@ -577,6 +578,7 @@ const FILTERS = ["All", "Web", "Mobile", "AI/ML", "DevOps"];
 
 export default function ProjectGrid() {
     const { projects, fetch, loading } = useProjectStore();
+    const { trackProjectClick } = useAnalytics();
     const [filter, setFilter] = useState("All");
     const [selected, setSelected] = useState(null);
 
