@@ -8,6 +8,7 @@ import {
     Tag,
     Share2,
     ArrowLeft,
+    ChevronLeft,
     ChevronRight,
     BookOpen,
     ExternalLink,
@@ -81,6 +82,7 @@ export default function BlogPost() {
     const { trackBlogRead } = useAnalytics();
 
     const [post, setPost] = useState(null);
+    const [adjacent, setAdjacent] = useState({ prev: null, next: null });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [copied, setCopied] = useState(false);
@@ -90,19 +92,30 @@ export default function BlogPost() {
     }, []);
 
     useEffect(() => {
+        let cancelled = false;
         setLoading(true);
         setError(null);
         blogAPI
             .getPost(slug)
             .then(({ data }) => {
+                if (cancelled) return;
                 setPost(data.data);
                 setLoading(false);
                 trackBlogRead(data.data);
             })
             .catch((err) => {
+                if (cancelled) return;
                 setError(err?.response?.status === 404 ? "not-found" : "error");
                 setLoading(false);
             });
+        // Fetch prev/next quietly (doesn't block main render)
+        blogAPI
+            .getAdjacent(slug)
+            .then(({ data }) => {
+                if (!cancelled) setAdjacent(data.data);
+            })
+            .catch(() => {});
+        return () => { cancelled = true; };
     }, [slug]);
 
     const handleShare = async () => {
@@ -336,7 +349,7 @@ export default function BlogPost() {
                                         {p.tags.map((tag) => (
                                             <Link
                                                 key={tag._id}
-                                                to={`/blog?tag=${tag.slug}`}
+                                                to={`/blog/tag/${tag.slug}`}
                                                 className="px-3 py-1 rounded-lg bg-dark-card border border-dark-border text-slate-400 text-xs hover:text-white hover:border-white/20 transition-colors"
                                             >
                                                 # {tag.name}
@@ -415,6 +428,57 @@ export default function BlogPost() {
                             </button>
                         </aside>
                     </div>
+
+                    {/* ── PREV / NEXT NAVIGATION ───────────────────── */}
+                    {(adjacent.prev || adjacent.next) && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 16 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4 }}
+                            className="mt-12 pt-10 border-t border-dark-border grid grid-cols-1 sm:grid-cols-2 gap-4"
+                        >
+                            {/* Previous */}
+                            {adjacent.prev ? (
+                                <Link
+                                    to={`/blog/${adjacent.prev.slug}`}
+                                    className="group flex items-start gap-3 p-4 rounded-2xl bg-dark-card border border-dark-border
+                                               hover:border-accent-blue/40 transition-all"
+                                >
+                                    <span className="flex-shrink-0 w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center
+                                                    group-hover:bg-accent-blue/10 transition-colors mt-0.5">
+                                        <ChevronLeft size={18} className="text-slate-400 group-hover:text-accent-blue transition-colors" />
+                                    </span>
+                                    <div className="min-w-0">
+                                        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-1">Previous</p>
+                                        <p className="text-sm font-semibold text-white group-hover:text-accent-blue transition-colors line-clamp-2">
+                                            {adjacent.prev.title}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ) : <div />}
+
+                            {/* Next */}
+                            {adjacent.next ? (
+                                <Link
+                                    to={`/blog/${adjacent.next.slug}`}
+                                    className="group flex items-start gap-3 p-4 rounded-2xl bg-dark-card border border-dark-border
+                                               hover:border-accent-blue/40 transition-all sm:flex-row-reverse sm:text-right"
+                                >
+                                    <span className="flex-shrink-0 w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center
+                                                    group-hover:bg-accent-blue/10 transition-colors mt-0.5">
+                                        <ChevronRight size={18} className="text-slate-400 group-hover:text-accent-blue transition-colors" />
+                                    </span>
+                                    <div className="min-w-0">
+                                        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-1">Next</p>
+                                        <p className="text-sm font-semibold text-white group-hover:text-accent-blue transition-colors line-clamp-2">
+                                            {adjacent.next.title}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ) : <div />}
+                        </motion.div>
+                    )}
 
                     {/* ── RELATED POSTS ────────────────────────────── */}
                     {p.relatedPosts?.length > 0 && (

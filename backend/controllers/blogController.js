@@ -107,6 +107,35 @@ export const getPost = async (req, res) => {
     }
 };
 
+// GET /api/blog/:slug/adjacent  — prev + next published post for in-article navigation
+export const getAdjacentPosts = async (req, res) => {
+    try {
+        const post = await BlogPost.findOne({ slug: req.params.slug, status: "published" })
+            .select("publishedAt")
+            .lean();
+        if (!post) return res.status(404).json({ success: false, message: "Post not found" });
+
+        const fields = "title slug excerpt featuredImage readingTime publishedAt";
+
+        const [prev, next] = await Promise.all([
+            // published BEFORE this post (most-recent one going back)
+            BlogPost.findOne({ status: "published", publishedAt: { $lt: post.publishedAt } })
+                .sort({ publishedAt: -1 })
+                .select(fields)
+                .lean(),
+            // published AFTER this post (earliest one going forward)
+            BlogPost.findOne({ status: "published", publishedAt: { $gt: post.publishedAt } })
+                .sort({ publishedAt: 1 })
+                .select(fields)
+                .lean(),
+        ]);
+
+        res.json({ success: true, data: { prev: prev || null, next: next || null } });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};
+
 // GET /api/blog/admin/:id  — single post by ID (admin, includes drafts)
 export const getPostById = async (req, res) => {
     try {

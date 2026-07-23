@@ -15,6 +15,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail.jsx"));
 const Blog = lazy(() => import("./pages/Blog.jsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
+const TagPage = lazy(() => import("./pages/TagPage.jsx"));
 const Search = lazy(() => import("./pages/Search.jsx"));
 
 import ProtectedRoute from "./components/ui/ProtectedRoute.jsx";
@@ -346,6 +347,11 @@ function AppInner() {
                 <Route
                     path="/blog"
                     element={<LazyRoute component={Blog} />}
+                />
+                {/* Tag page — MUST come before /blog/:slug */}
+                <Route
+                    path="/blog/tag/:slug"
+                    element={<LazyRoute component={TagPage} />}
                 />
                 <Route
                     path="/blog/:slug"

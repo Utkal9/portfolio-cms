@@ -10,7 +10,7 @@
  * Vercel rewrite in vercel.json maps /sitemap.xml → /api/sitemap
  */
 import express from "express";
-import { Project, BlogPost } from "../models/index.js";
+import { Project, BlogPost, BlogTag } from "../models/index.js";
 
 const router = express.Router();
 
@@ -18,6 +18,7 @@ const DOMAIN = "https://utkalbehera.com";
 const STATIC_PAGES = [
     { url: "/", changefreq: "weekly", priority: "1.0" },
     { url: "/blog", changefreq: "daily", priority: "0.9" },
+    { url: "/search", changefreq: "monthly", priority: "0.5" },
 ];
 
 function escapeXml(unsafe) {
@@ -46,10 +47,11 @@ function buildUrlEntry({ loc, lastmod, changefreq = "monthly", priority = "0.7" 
 
 router.get("/", async (req, res) => {
     try {
-        // Fetch all visible projects and published blog posts in parallel
-        const [projects, posts] = await Promise.all([
+        // Fetch all visible projects, published blog posts, and tags in parallel
+        const [projects, posts, tags] = await Promise.all([
             Project.find({ visible: true }).select("slug updatedAt _id").lean(),
             BlogPost.find({ status: "published" }).select("slug updatedAt publishedAt").lean(),
+            BlogTag.find().select("slug updatedAt").lean(),
         ]);
 
         const staticEntries = STATIC_PAGES.map((p) =>
@@ -80,6 +82,15 @@ router.get("/", async (req, res) => {
             }),
         );
 
+        const tagEntries = tags.map((t) =>
+            buildUrlEntry({
+                loc: `${DOMAIN}/blog/tag/${escapeXml(t.slug)}`,
+                lastmod: toIsoDate(t.updatedAt || new Date()),
+                changefreq: "weekly",
+                priority: "0.6",
+            }),
+        );
+
         const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -88,6 +99,7 @@ router.get("/", async (req, res) => {
 ${staticEntries.join("")}
 ${projectEntries.join("")}
 ${blogEntries.join("")}
+${tagEntries.join("")}
 </urlset>`;
 
         res.setHeader("Content-Type", "application/xml; charset=utf-8");

@@ -159,6 +159,7 @@ export const blogAPI = {
     // Public
     getPosts: (params) => api.get("/blog", { params }),
     getPost: (slug) => api.get(`/blog/${slug}`),
+    getAdjacent: (slug) => api.get(`/blog/${slug}/adjacent`),
     getCategories: () => api.get("/blog/categories"),
     getTags: () => api.get("/blog/tags"),
     // Admin

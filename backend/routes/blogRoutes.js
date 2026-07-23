@@ -3,6 +3,7 @@ import {
     getPosts,
     getAllPosts,
     getPost,
+    getAdjacentPosts,
     getPostById,
     createPost,
     updatePost,
@@ -25,6 +26,7 @@ const router = express.Router();
 router.get("/categories", getCategories);
 router.get("/tags", getTags);
 router.get("/", getPosts);
+router.get("/:slug/adjacent", getAdjacentPosts); // prev/next navigation
 router.get("/:slug", getPost);
 
 // ── Admin-only routes ──────────────────────────────────────────────────────
