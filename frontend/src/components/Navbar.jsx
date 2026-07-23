@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon, Sun, Menu, X, BookOpen, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Moon, Sun, Menu, X, Search } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { useThemeStore, useSiteConfigStore } from "../store/index.js";
 
 const NAV_ITEMS = [
@@ -16,16 +16,19 @@ const NAV_ITEMS = [
 export default function Navbar() {
     const { isDark, toggle } = useThemeStore();
     const { config } = useSiteConfigStore();
+    const location = useLocation();
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [active, setActive] = useState("");
 
     const name = config?.hero?.name || "Utkal Behera";
 
+    // Is the user on the homepage?
+    const isHome = location.pathname === "/";
+
     // Dynamic nav items based on section visibility
     const visibleNav = NAV_ITEMS.filter((item) => {
         const key = item.href.slice(1);
-        // If config not loaded yet show all, else respect visibility
         if (!config?.sections) return true;
         return config.sections[key] !== false;
     });
@@ -36,7 +39,12 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
+    // Only run intersection observer on homepage
     useEffect(() => {
+        if (!isHome) {
+            setActive("");
+            return;
+        }
         const ids = NAV_ITEMS.map((i) => i.href.slice(1));
         const observer = new IntersectionObserver(
             (entries) =>
@@ -50,7 +58,10 @@ export default function Navbar() {
             if (el) observer.observe(el);
         });
         return () => observer.disconnect();
-    }, []);
+    }, [isHome]);
+
+    // Build the correct href: on home use "#about", elsewhere use "/#about"
+    const navHref = (item) => (isHome ? item.href : `/${item.href}`);
 
     const navBg = scrolled
         ? "bg-white/80 dark:bg-dark-bg2/90 backdrop-blur-xl shadow-sm dark:shadow-dark-border/20 shadow-slate-200/60"
@@ -65,7 +76,7 @@ export default function Navbar() {
         >
             <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
                 {/* Logo */}
-                <a href="#" className="flex items-center gap-2 group">
+                <Link to="/" className="flex items-center gap-2 group">
                     <img
                         src="/logo/logo-icon.webp"
                         alt="UB Logo"
@@ -80,24 +91,24 @@ export default function Navbar() {
                         {name.split(" ")[0]}
                         <span className="grad-text">.</span>
                     </span>
-                </a>
+                </Link>
 
                 {/* Desktop links */}
                 <div className="hidden md:flex items-center gap-1">
                     {visibleNav.map((item) => (
                         <a
                             key={item.href}
-                            href={item.href}
+                            href={navHref(item)}
                             className={`relative px-4 py-2 rounded-lg text-sm font-medium
                 transition-all duration-200
                 ${
-                    active === item.href.slice(1)
+                    isHome && active === item.href.slice(1)
                         ? "text-accent-blue dark:text-accent-blue"
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
                         >
                             {item.label}
-                            {active === item.href.slice(1) && (
+                            {isHome && active === item.href.slice(1) && (
                                 <motion.div
                                     layoutId="nav-indicator"
                                     className="absolute inset-0 bg-blue-50 dark:bg-accent-blue/10 rounded-lg -z-10"
@@ -110,13 +121,22 @@ export default function Navbar() {
                             )}
                         </a>
                     ))}
-                    {/* Blog — page link */}
+                    {/* Blog — page link, no icon, same style as other nav items */}
                     <Link
                         to="/blog"
-                        className="relative px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5
-                text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all duration-200"
+                        className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                ${location.pathname.startsWith("/blog")
+                    ? "text-accent-blue"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"}`}
                     >
-                        <BookOpen size={13} /> Blog
+                        Blog
+                        {location.pathname.startsWith("/blog") && (
+                            <motion.div
+                                layoutId="nav-indicator"
+                                className="absolute inset-0 bg-blue-50 dark:bg-accent-blue/10 rounded-lg -z-10"
+                                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                            />
+                        )}
                     </Link>
                 </div>
 
@@ -125,16 +145,18 @@ export default function Navbar() {
                     {/* Search icon */}
                     <Link
                         to="/search"
-                        className="a11y-hit w-9 h-9 rounded-xl flex items-center justify-center
+                        className="w-9 h-9 rounded-xl flex items-center justify-center
               bg-slate-100 dark:bg-dark-card2 hover:bg-slate-200 dark:hover:bg-dark-card
               text-slate-600 dark:text-slate-300 transition-all duration-200"
                         aria-label="Search"
                     >
                         <Search size={16} />
                     </Link>
+
+                    {/* Theme toggle */}
                     <button
                         onClick={toggle}
-                        className="a11y-hit w-9 h-9 rounded-xl flex items-center justify-center
+                        className="w-9 h-9 rounded-xl flex items-center justify-center
               bg-slate-100 dark:bg-dark-card2 hover:bg-slate-200 dark:hover:bg-dark-card
               text-slate-600 dark:text-slate-300 transition-all duration-200"
                         aria-label="Toggle theme"
@@ -164,8 +186,9 @@ export default function Navbar() {
                         </AnimatePresence>
                     </button>
 
+                    {/* Hire Me CTA */}
                     <a
-                        href="#contact"
+                        href={isHome ? "#contact" : "/#contact"}
                         className="hidden sm:block px-4 py-2 rounded-xl text-sm font-semibold
               bg-grad-main text-white shadow-glow-blue hover:shadow-glow-purple
               transition-all duration-300 hover:scale-105"
@@ -173,15 +196,12 @@ export default function Navbar() {
                         Hire Me
                     </a>
 
+                    {/* Mobile hamburger */}
                     <button
                         onClick={() => setMenuOpen((v) => !v)}
-                        className="a11y-hit md:hidden w-9 h-9 rounded-xl flex items-center justify-center
+                        className="md:hidden w-9 h-9 rounded-xl flex items-center justify-center
               bg-slate-100 dark:bg-dark-card2 text-slate-600 dark:text-slate-300"
-                        aria-label={
-                            menuOpen
-                                ? "Close navigation menu"
-                                : "Open navigation menu"
-                        }
+                        aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
                     >
                         {menuOpen ? <X size={18} /> : <Menu size={18} />}
                     </button>
@@ -202,11 +222,11 @@ export default function Navbar() {
                             {visibleNav.map((item) => (
                                 <a
                                     key={item.href}
-                                    href={item.href}
+                                    href={navHref(item)}
                                     onClick={() => setMenuOpen(false)}
                                     className={`py-3 px-4 rounded-xl text-sm font-medium transition-colors
                     ${
-                        active === item.href.slice(1)
+                        isHome && active === item.href.slice(1)
                             ? "text-accent-blue bg-accent-blue/10"
                             : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-dark-card2"
                     }`}
@@ -214,17 +234,20 @@ export default function Navbar() {
                                     {item.label}
                                 </a>
                             ))}
-                            {/* Blog mobile link */}
+                            {/* Blog mobile */}
                             <Link
                                 to="/blog"
                                 onClick={() => setMenuOpen(false)}
-                                className="flex items-center gap-2 py-3 px-4 rounded-xl text-sm font-medium
-                  text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-dark-card2 transition-colors"
+                                className={`py-3 px-4 rounded-xl text-sm font-medium transition-colors
+                  ${location.pathname.startsWith("/blog")
+                    ? "text-accent-blue bg-accent-blue/10"
+                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-dark-card2"}`}
                             >
-                                <BookOpen size={14} /> Blog
+                                Blog
                             </Link>
+                            {/* Hire Me */}
                             <a
-                                href="#contact"
+                                href={isHome ? "#contact" : "/#contact"}
                                 onClick={() => setMenuOpen(false)}
                                 className="mt-2 py-3 px-4 rounded-xl text-sm font-semibold
                   text-center bg-grad-main text-white"

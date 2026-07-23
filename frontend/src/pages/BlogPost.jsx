@@ -121,7 +121,7 @@ export default function BlogPost() {
         return (
             <div className="min-h-screen bg-dark-bg">
                 <Navbar />
-                <div className="max-w-4xl mx-auto px-4 py-20 animate-pulse">
+                <div className="max-w-4xl mx-auto px-4 pt-24 pb-16 animate-pulse">
                     <div className="h-4 w-48 bg-white/5 rounded mb-8" />
                     <div className="h-10 w-3/4 bg-white/5 rounded mb-4" />
                     <div className="h-5 w-1/3 bg-white/5 rounded mb-8" />
@@ -217,7 +217,7 @@ export default function BlogPost() {
             <div className="min-h-screen bg-dark-bg text-slate-100">
                 <Navbar />
 
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 pb-24">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-24">
                     <Breadcrumb title={p.title} />
 
                     {/* ── HERO ──────────────────────────────────────── */}

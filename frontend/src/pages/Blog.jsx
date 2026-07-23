@@ -241,7 +241,7 @@ export default function Blog() {
             <div className="min-h-screen bg-dark-bg text-slate-100">
                 <Navbar />
 
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 pb-24">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-24">
                     {/* Header */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
