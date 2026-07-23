@@ -15,6 +15,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail.jsx"));
 const Blog = lazy(() => import("./pages/Blog.jsx"));
 const BlogPost = lazy(() => import("./pages/BlogPost.jsx"));
+const Search = lazy(() => import("./pages/Search.jsx"));
 
 import ProtectedRoute from "./components/ui/ProtectedRoute.jsx";
 import GoogleAnalytics from "./components/analytics/GoogleAnalytics";
@@ -349,6 +350,12 @@ function AppInner() {
                 <Route
                     path="/blog/:slug"
                     element={<LazyRoute component={BlogPost} />}
+                />
+
+                {/* Search */}
+                <Route
+                    path="/search"
+                    element={<LazyRoute component={Search} />}
                 />
 
                 <Route

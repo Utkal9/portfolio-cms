@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon, Sun, Menu, X, BookOpen } from "lucide-react";
+import { Moon, Sun, Menu, X, BookOpen, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useThemeStore, useSiteConfigStore } from "../store/index.js";
 
@@ -122,6 +122,16 @@ export default function Navbar() {
 
                 {/* Right controls */}
                 <div className="flex items-center gap-2">
+                    {/* Search icon */}
+                    <Link
+                        to="/search"
+                        className="a11y-hit w-9 h-9 rounded-xl flex items-center justify-center
+              bg-slate-100 dark:bg-dark-card2 hover:bg-slate-200 dark:hover:bg-dark-card
+              text-slate-600 dark:text-slate-300 transition-all duration-200"
+                        aria-label="Search"
+                    >
+                        <Search size={16} />
+                    </Link>
                     <button
                         onClick={toggle}
                         className="a11y-hit w-9 h-9 rounded-xl flex items-center justify-center
