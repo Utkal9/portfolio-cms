@@ -20,6 +20,7 @@ import Footer from "../components/Footer.jsx";
 import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 import { useSiteConfigStore } from "../store/index.js";
 import { useAnalytics } from "../hooks/useAnalytics.js";
+import { Shimmer } from "../components/ui/loading/index.js";
 
 // ── Helpers ───────────────────────────────────────────────────────────
 function fmtDate(d) {
@@ -132,16 +133,37 @@ export default function BlogPost() {
     // ── Loading ──────────────────────────────────────────────────────
     if (loading) {
         return (
-            <div className="min-h-screen bg-dark-bg">
+            <div className="min-h-screen bg-dark-bg" role="status" aria-label="Loading article" aria-busy="true">
                 <Navbar />
-                <div className="max-w-4xl mx-auto px-4 pt-24 pb-16 animate-pulse">
-                    <div className="h-4 w-48 bg-white/5 rounded mb-8" />
-                    <div className="h-10 w-3/4 bg-white/5 rounded mb-4" />
-                    <div className="h-5 w-1/3 bg-white/5 rounded mb-8" />
-                    <div className="h-80 bg-white/5 rounded-2xl mb-8" />
+                <div className="max-w-4xl mx-auto px-4 pt-24 pb-16">
+                    {/* Breadcrumb */}
+                    <Shimmer className="w-48 h-4 mb-8" />
+
+                    {/* Title */}
+                    <Shimmer className="w-full h-10 mb-3" />
+                    <Shimmer className="w-3/4 h-10 mb-6" />
+
+                    {/* Meta row: author · date · read time */}
+                    <div className="flex gap-4 mb-8">
+                        <Shimmer className="w-24 h-4 rounded-full" />
+                        <Shimmer className="w-28 h-4 rounded-full" />
+                        <Shimmer className="w-20 h-4 rounded-full" />
+                    </div>
+
+                    {/* Hero image */}
+                    <Shimmer className="w-full h-72 rounded-2xl mb-10" />
+
+                    {/* Article body lines */}
                     <div className="space-y-3">
-                        {[...Array(6)].map((_, i) => (
-                            <div key={i} className="h-4 bg-white/5 rounded" style={{ width: `${90 - i * 5}%` }} />
+                        {[100, 95, 88, 100, 92, 80, 100, 90, 75].map((pct, i) => (
+                            <Shimmer key={i} className={`h-4`} style={{ width: `${pct}%` }} />
+                        ))}
+                    </div>
+
+                    {/* Paragraph break */}
+                    <div className="mt-8 space-y-3">
+                        {[100, 85, 93, 70].map((pct, i) => (
+                            <Shimmer key={i} className="h-4" style={{ width: `${pct}%` }} />
                         ))}
                     </div>
                 </div>

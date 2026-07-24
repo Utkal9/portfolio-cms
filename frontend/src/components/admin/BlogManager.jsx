@@ -26,6 +26,7 @@ import {
     ExternalLink,
 } from "lucide-react";
 import { blogAPI } from "../../services/api.js";
+import { AdminTableSkeleton, ButtonLoader } from "../ui/loading/index.js";
 
 // ── helpers ───────────────────────────────────────────────────────────
 function slugify(text) {
@@ -410,13 +411,7 @@ export default function BlogManager() {
                 )}
 
                 {/* Loading */}
-                {loading && (
-                    <div className="space-y-3">
-                        {[...Array(4)].map((_, i) => (
-                            <div key={i} className="h-16 rounded-xl bg-white/3 border border-dark-border animate-pulse" />
-                        ))}
-                    </div>
-                )}
+                {loading && <AdminTableSkeleton rows={4} />}
 
                 {/* Empty */}
                 {!loading && posts.length === 0 && (
@@ -694,17 +689,14 @@ export default function BlogManager() {
                         </div>
 
                         {/* Save button */}
-                        <button
+                        <ButtonLoader
                             onClick={handleSave}
-                            disabled={saving}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-accent-blue text-white text-sm font-bold hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-wait"
+                            loading={saving}
+                            loadingText="Saving…"
+                            className="w-full px-4 py-2.5 rounded-xl bg-accent-blue text-white text-sm font-bold hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-wait"
                         >
-                            {saving ? (
-                                <><RefreshCw size={14} className="animate-spin" /> Saving…</>
-                            ) : (
-                                <><Save size={14} /> {editId ? "Update Post" : "Create Post"}</>
-                            )}
-                        </button>
+                            <Save size={14} /> {editId ? "Update Post" : "Create Post"}
+                        </ButtonLoader>
                     </div>
 
                     {/* Featured image */}

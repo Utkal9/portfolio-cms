@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Edit2, Trash2, X, GraduationCap } from "lucide-react";
 import toast from "react-hot-toast";
 import api from "../../services/api.js";
+import { AdminTableSkeleton } from "../ui/loading/index.js";
 
 const EMPTY = {
     institution: "",
@@ -240,18 +241,7 @@ export default function EducationManager() {
                 )}
             </AnimatePresence>
 
-            {loading && (
-                <div className="space-y-4">
-                    {Array(2)
-                        .fill(0)
-                        .map((_, i) => (
-                            <div
-                                key={i}
-                                className="skeleton h-28 rounded-2xl"
-                            />
-                        ))}
-                </div>
-            )}
+            {loading && <AdminTableSkeleton rows={2} />}
 
             {!loading && (
                 <div className="space-y-4">

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { semesterAPI } from "../../services/api.js";
+import { AdminTableSkeleton } from "../ui/loading/index.js";
 
 const GRADES = ["O", "A+", "A", "B+", "B", "C", "F", "IP"];
 const GRADE_POINTS = {
@@ -497,18 +498,7 @@ export default function SemesterManager() {
                 </div>
             )}
 
-            {loading && (
-                <div className="space-y-3">
-                    {Array(4)
-                        .fill(0)
-                        .map((_, i) => (
-                            <div
-                                key={i}
-                                className="skeleton h-20 rounded-2xl"
-                            />
-                        ))}
-                </div>
-            )}
+            {loading && <AdminTableSkeleton rows={4} />}
 
             {/* Semester list */}
             {!loading && (

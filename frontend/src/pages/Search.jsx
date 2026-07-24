@@ -26,6 +26,7 @@ import Footer from "../components/Footer.jsx";
 import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 import { useSiteConfigStore } from "../store/index.js";
 import { useAnalytics } from "../hooks/useAnalytics.js";
+import { Shimmer } from "../components/ui/loading/index.js";
 
 // ── Result card types ────────────────────────────────────────────────
 function ProjectCard({ item, query }) {
@@ -189,12 +190,15 @@ function Highlight({ text = "", query = "" }) {
 // ── Skeleton card ──────────────────────────────────────────────────────
 function SkeletonCard() {
     return (
-        <div className="flex gap-4 p-4 rounded-2xl bg-dark-card border border-dark-border animate-pulse">
-            <div className="w-16 h-14 rounded-xl bg-white/5 flex-shrink-0" />
+        <div
+            className="flex gap-4 p-4 rounded-2xl bg-dark-card border border-dark-border"
+            aria-hidden="true"
+        >
+            <Shimmer className="w-16 h-14 rounded-xl flex-shrink-0" />
             <div className="flex-1 space-y-2">
-                <div className="h-3 w-16 bg-white/5 rounded" />
-                <div className="h-4 bg-white/5 rounded" />
-                <div className="h-3 w-3/4 bg-white/5 rounded" />
+                <Shimmer className="w-16 h-3 rounded-full" />
+                <Shimmer className="w-full h-4" />
+                <Shimmer className="w-3/4 h-3" />
             </div>
         </div>
     );

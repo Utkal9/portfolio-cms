@@ -8,6 +8,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 import { useSiteConfigStore } from "../store/index.js";
+import { BlogCardSkeleton } from "../components/ui/loading/index.js";
 
 // ── Format helpers ────────────────────────────────────────────────────
 function fmtDate(d) {
@@ -327,16 +328,14 @@ export default function Blog() {
 
                     {/* Loading */}
                     {loading && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                            role="status"
+                            aria-label="Loading articles"
+                            aria-busy="true"
+                        >
                             {[...Array(6)].map((_, i) => (
-                                <div key={i} className="rounded-2xl bg-dark-card border border-dark-border overflow-hidden animate-pulse">
-                                    <div className="aspect-video bg-white/5" />
-                                    <div className="p-5 space-y-2">
-                                        <div className="h-3 w-20 bg-white/5 rounded" />
-                                        <div className="h-4 bg-white/5 rounded" />
-                                        <div className="h-4 w-4/5 bg-white/5 rounded" />
-                                    </div>
-                                </div>
+                                <BlogCardSkeleton key={i} />
                             ))}
                         </div>
                     )}

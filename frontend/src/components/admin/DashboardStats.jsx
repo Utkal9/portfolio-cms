@@ -17,6 +17,7 @@ import {
     useMessageStore,
     useSiteConfigStore,
 } from "../../store/index.js";
+import { AdminStatsSkeleton } from "../ui/loading/index.js";
 
 function StatCard({ icon, label, value, color, delay, to }) {
     return (
@@ -146,12 +147,16 @@ export default function DashboardStats() {
                 </p>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                {stats.map((s, i) => (
-                    <StatCard key={i} {...s} />
-                ))}
-            </div>
+            {/* Stats — show skeleton while all stores are still loading */}
+            {(useProjectStore.getState().loading || projects.length === 0 && skills.length === 0) ? (
+                <AdminStatsSkeleton />
+            ) : (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    {stats.map((s, i) => (
+                        <StatCard key={i} {...s} />
+                    ))}
+                </div>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Section visibility */}

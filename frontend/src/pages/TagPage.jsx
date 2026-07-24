@@ -8,6 +8,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
 import { useSiteConfigStore } from "../store/index.js";
+import { BlogCardSkeleton } from "../components/ui/loading/index.js";
 
 function fmtDate(d) {
     if (!d) return "";
@@ -111,9 +112,14 @@ export default function TagPage() {
 
                     {/* Loading skeleton */}
                     {loading && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
+                        <div
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                            role="status"
+                            aria-label="Loading articles"
+                            aria-busy="true"
+                        >
                             {[...Array(6)].map((_, i) => (
-                                <div key={i} className="h-56 bg-white/5 rounded-2xl" />
+                                <BlogCardSkeleton key={i} />
                             ))}
                         </div>
                     )}

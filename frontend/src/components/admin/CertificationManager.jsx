@@ -4,6 +4,7 @@ import { Plus, Edit2, Trash2, X, Upload, Award } from "lucide-react";
 import toast from "react-hot-toast";
 import { certsAPI } from "../../services/api.js";
 import { optimizeCloudinaryImage } from "../../utils/cloudinary.js";
+import { Shimmer } from "../ui/loading/index.js";
 
 const EMPTY = {
     title: "",
@@ -249,15 +250,19 @@ export default function CertificationManager() {
             </AnimatePresence>
 
             {loading && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {Array(3)
-                        .fill(0)
-                        .map((_, i) => (
-                            <div
-                                key={i}
-                                className="skeleton h-48 rounded-2xl"
-                            />
-                        ))}
+                <div
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    role="status"
+                    aria-busy="true"
+                    aria-label="Loading certifications"
+                >
+                    {Array(3).fill(0).map((_, i) => (
+                        <div key={i} className="p-4 rounded-2xl border border-dark-border space-y-3">
+                            <Shimmer className="w-full h-28 rounded-xl" />
+                            <Shimmer className="w-3/4 h-4" />
+                            <Shimmer className="w-1/2 h-3" />
+                        </div>
+                    ))}
                 </div>
             )}
 

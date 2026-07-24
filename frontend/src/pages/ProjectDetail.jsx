@@ -24,6 +24,7 @@ import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import { optimizeCloudinaryImage, cloudinarySrcSet } from "../utils/cloudinary.js";
 import { useSiteConfigStore } from "../store/index.js";
+import { Shimmer } from "../components/ui/loading/index.js";
 
 // ── Fade-in section wrapper ───────────────────────────────────────────
 function Section({ children, className = "" }) {
@@ -165,17 +166,42 @@ export default function ProjectDetail() {
     // ── Loading state ────────────────────────────────────────────────
     if (loading) {
         return (
-            <div className="min-h-screen bg-dark-bg">
+            <div className="min-h-screen bg-dark-bg" role="status" aria-label="Loading project" aria-busy="true">
                 <Navbar />
-                <div className="max-w-5xl mx-auto px-4 pt-24 pb-16 animate-pulse">
-                    <div className="h-4 w-48 bg-white/5 rounded mb-8" />
-                    <div className="h-10 w-3/4 bg-white/5 rounded mb-4" />
-                    <div className="h-5 w-1/2 bg-white/5 rounded mb-8" />
-                    <div className="h-80 bg-white/5 rounded-2xl mb-8" />
-                    <div className="space-y-3">
-                        {[...Array(4)].map((_, i) => (
-                            <div key={i} className="h-4 bg-white/5 rounded" style={{ width: `${90 - i * 10}%` }} />
+                <div className="max-w-5xl mx-auto px-4 pt-24 pb-16">
+                    {/* Breadcrumb */}
+                    <Shimmer className="w-48 h-4 mb-8" />
+
+                    {/* Title + tagline */}
+                    <Shimmer className="w-3/4 h-10 mb-3" />
+                    <Shimmer className="w-1/2 h-6 mb-6" />
+
+                    {/* Tech chips row */}
+                    <div className="flex gap-2 mb-10 flex-wrap">
+                        {[60, 80, 70, 90, 65].map((w, i) => (
+                            <Shimmer key={i} className={`h-6 rounded-full`} style={{ width: `${w}px` }} />
                         ))}
+                    </div>
+
+                    {/* Image gallery placeholder */}
+                    <Shimmer className="w-full h-72 rounded-2xl mb-4" />
+                    <div className="flex gap-3 mb-10">
+                        {[...Array(4)].map((_, i) => (
+                            <Shimmer key={i} className="w-20 h-14 rounded-xl" />
+                        ))}
+                    </div>
+
+                    {/* Two-column: body + sidebar */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2 space-y-4">
+                            {[100, 95, 88, 100, 92, 80, 100, 85].map((pct, i) => (
+                                <Shimmer key={i} className="h-4" style={{ width: `${pct}%` }} />
+                            ))}
+                        </div>
+                        <div className="space-y-4">
+                            <Shimmer className="w-full h-40 rounded-2xl" />
+                            <Shimmer className="w-full h-24 rounded-2xl" />
+                        </div>
                     </div>
                 </div>
             </div>

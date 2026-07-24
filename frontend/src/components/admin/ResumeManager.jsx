@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Upload, Download, FileText, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { resumeAPI } from "../../services/api.js";
+import { Spinner, Shimmer } from "../ui/loading/index.js";
 
 export default function ResumeManager() {
     const [resume, setResume] = useState(null);
@@ -66,7 +67,7 @@ export default function ResumeManager() {
             >
                 {uploading ? (
                     <>
-                        <div className="w-8 h-8 border-2 border-accent-blue/30 border-t-accent-blue rounded-full animate-spin mb-3" />
+                        <Spinner size="lg" color="text-accent-blue" className="mb-3" />
                         <span className="text-sm text-accent-blue font-medium">
                             Uploading to Cloudinary...
                         </span>
@@ -96,7 +97,7 @@ export default function ResumeManager() {
 
             {/* Current resume */}
             {loading ? (
-                <div className="skeleton h-24 rounded-2xl" />
+                <Shimmer className="h-24 rounded-2xl" />
             ) : resume ? (
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
