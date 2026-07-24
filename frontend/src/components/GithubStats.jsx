@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Github, Star, GitFork, ExternalLink, RefreshCw } from "lucide-react";
 import { GitHubCalendar } from "react-github-calendar";
 import axios from "axios";
+import { Shimmer } from "./ui/loading/index.js";
 
 const USERNAME = "Utkal9";
 
@@ -67,17 +68,20 @@ export function GithubStats() {
 
                 {/* Loading */}
                 {loading && (
-                    <div className="space-y-4">
-                        <div className="skeleton h-24 rounded-2xl max-w-lg mx-auto" />
+                    <div className="space-y-4" role="status" aria-label="Loading GitHub stats" aria-busy="true">
+                        <Shimmer className="h-24 rounded-2xl max-w-lg mx-auto" />
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {Array(6)
-                                .fill(0)
-                                .map((_, i) => (
-                                    <div
-                                        key={i}
-                                        className="skeleton h-28 rounded-2xl"
-                                    />
-                                ))}
+                            {Array(6).fill(0).map((_, i) => (
+                                <div key={i} className="p-4 rounded-2xl border border-dark-border space-y-2">
+                                    <Shimmer className="w-3/4 h-4" />
+                                    <Shimmer className="w-full h-3" />
+                                    <Shimmer className="w-1/2 h-3" />
+                                    <div className="flex gap-3 pt-1">
+                                        <Shimmer className="w-12 h-3 rounded-full" />
+                                        <Shimmer className="w-12 h-3 rounded-full" />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 )}

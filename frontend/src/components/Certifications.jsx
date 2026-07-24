@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, Award, Shield } from "lucide-react";
 import { certsAPI } from "../services/api.js";
 import { optimizeCloudinaryImage } from "../utils/cloudinary.js";
+import { Shimmer } from "./ui/loading/index.js";
 
 export default function Certifications() {
     const [certs, setCerts] = useState([]);
@@ -44,15 +45,20 @@ export default function Certifications() {
                 </motion.div>
 
                 {loading && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {Array(3)
-                            .fill(0)
-                            .map((_, i) => (
-                                <div
-                                    key={i}
-                                    className="skeleton h-48 rounded-2xl"
-                                />
-                            ))}
+                    <div
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        role="status"
+                        aria-label="Loading certifications"
+                        aria-busy="true"
+                    >
+                        {Array(3).fill(0).map((_, i) => (
+                            <div key={i} className="p-5 rounded-2xl border border-slate-200 dark:border-dark-border space-y-3">
+                                <Shimmer className="w-full h-32 rounded-xl" />
+                                <Shimmer className="w-3/4 h-5" />
+                                <Shimmer className="w-1/2 h-3" />
+                                <Shimmer className="w-24 h-6 rounded-full" />
+                            </div>
+                        ))}
                     </div>
                 )}
 

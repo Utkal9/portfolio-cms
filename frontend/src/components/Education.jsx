@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import api from "../services/api.js";
 import { semesterAPI } from "../services/api.js";
+import { Shimmer } from "./ui/loading/index.js";
 
 const GRADE_COLORS = {
     O: {
@@ -319,12 +320,24 @@ export default function Education() {
                 </motion.div>
 
                 {loading ? (
-                    <div className="space-y-6">
+                    <div
+                        className="space-y-6"
+                        role="status"
+                        aria-label="Loading education"
+                        aria-busy="true"
+                    >
                         {[1, 2, 3].map((i) => (
                             <div
                                 key={i}
-                                className="h-28 bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border animate-pulse rounded-2xl"
-                            />
+                                className="flex gap-4 p-5 rounded-2xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card"
+                            >
+                                <Shimmer className="w-12 h-12 rounded-xl flex-shrink-0" />
+                                <div className="flex-1 space-y-2">
+                                    <Shimmer className="w-2/3 h-5" />
+                                    <Shimmer className="w-1/3 h-3" />
+                                    <Shimmer className="w-1/2 h-3" />
+                                </div>
+                            </div>
                         ))}
                     </div>
                 ) : (
