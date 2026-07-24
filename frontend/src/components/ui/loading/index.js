@@ -20,5 +20,5 @@ export { ImageSkeleton }                  from "./ImageSkeleton.jsx";
 export { PageLoader }                     from "./PageLoader.jsx";
 export { SectionLoader }                  from "./SectionLoader.jsx";
 export { CardSkeleton, BlogCardSkeleton, ProjectCardSkeleton } from "./CardSkeletons.jsx";
-export { AdminTableSkeleton }             from "./AdminTableSkeleton.jsx";
+export { AdminTableSkeleton, AdminStatsSkeleton } from "./AdminTableSkeleton.jsx";
 export { LoadingOverlay }                 from "./LoadingOverlay.jsx";
