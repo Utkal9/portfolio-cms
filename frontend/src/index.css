@@ -235,14 +235,42 @@ body {
 .skeleton {
     background: linear-gradient(
         90deg,
-        rgba(255, 255, 255, 0.05) 25%,
-        rgba(255, 255, 255, 0.1) 50%,
-        rgba(255, 255, 255, 0.05) 75%
+        rgba(255, 255, 255, 0.04) 25%,
+        rgba(255, 255, 255, 0.10) 50%,
+        rgba(255, 255, 255, 0.04) 75%
     );
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    animation: shimmer 1.5s ease infinite;
     border-radius: 8px;
 }
+
+/* Light-theme skeleton (used inside light-bg containers) */
+.skeleton-light {
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.06) 25%,
+        rgba(0, 0, 0, 0.12) 50%,
+        rgba(0, 0, 0, 0.06) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease infinite;
+    border-radius: 8px;
+}
+
+/* Respect prefers-reduced-motion — swap shimmer for a simple opacity pulse */
+@media (prefers-reduced-motion: reduce) {
+    .skeleton,
+    .skeleton-light {
+        animation: none;
+        opacity: 0.5;
+    }
+    /* Also tone down any existing animate-pulse/bounce on loading UI */
+    [role="status"] .animate-bounce,
+    [role="status"] .animate-pulse {
+        animation-duration: 3s;
+    }
+}
+
 
 /* ── Accessibility hit area utility: increases clickable area without visual changes ── */
 .a11y-hit {
