@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, Zap, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/index.js";
+import { ButtonLoader } from "../components/ui/loading/index.js";
 
 export default function Login() {
     const { login, isAuthenticated } = useAuthStore();
@@ -131,24 +132,17 @@ export default function Login() {
                         </div>
 
                         {/* Submit */}
-                        <button
+                        <ButtonLoader
                             type="submit"
-                            disabled={loading}
-                            className="w-full flex items-center justify-center gap-2
-                                       py-3.5 rounded-xl bg-grad-main text-white font-bold text-sm
+                            loading={loading}
+                            loadingText="Signing in…"
+                            className="w-full py-3.5 rounded-xl bg-grad-main text-white font-bold text-sm
                                        shadow-glow-blue hover:shadow-glow-purple
                                        hover:scale-[1.02] transition-all duration-300 mt-1
-                                       disabled:opacity-60 disabled:cursor-not-allowed
                                        disabled:hover:scale-100"
                         >
-                            {loading ? (
-                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            ) : (
-                                <>
-                                    <Zap size={16} /> Sign In
-                                </>
-                            )}
-                        </button>
+                            <Zap size={16} /> Sign In
+                        </ButtonLoader>
                     </form>
 
                     <div className="mt-6 pt-5 border-t border-dark-border text-center">

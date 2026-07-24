@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { useThemeStore } from "./store/index.js";
 import ErrorBoundary from "./components/ui/ErrorBoundary.jsx";
-import { PageSkeleton } from "./components/ui/Skeleton.jsx";
+import { PageLoader } from "./components/ui/loading/index.js";
 
 // ── Lazy pages ────────────────────────────────────────────────────────
 // Each page gets its OWN Suspense so AnimatePresence never races with
@@ -279,7 +279,7 @@ function PageTransition({ children }) {
 function LazyRoute({ component: Component }) {
     return (
         <ErrorBoundary>
-            <Suspense fallback={<PageSkeleton />}>
+            <Suspense fallback={<PageLoader />}>
                 <PageTransition>
                     <Component />
                 </PageTransition>
@@ -297,7 +297,7 @@ function LazyRoute({ component: Component }) {
 function LazyRouteNoTransition({ component: Component }) {
     return (
         <ErrorBoundary>
-            <Suspense fallback={<PageSkeleton />}>
+            <Suspense fallback={<PageLoader />}>
                 <Component />
             </Suspense>
         </ErrorBoundary>

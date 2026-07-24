@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Send, Mail, Phone, MapPin, Github, Linkedin } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { contactAPI } from '../services/api.js';
+import { ButtonLoader } from './ui/loading/index.js';
 
 const SOCIALS = [
   { icon: <Github size={18}/>,   label: 'GitHub',   href: 'https://github.com/Utkal9' },
@@ -154,20 +155,18 @@ export default function ContactSection({ config }) {
                 placeholder="Your message..." rows={5}
                 className={`${inputClass} resize-none`} />
             </div>
-            <button
-              type="submit" disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl
+            <ButtonLoader
+              type="submit"
+              loading={loading}
+              loadingText="Sending…"
+              className="w-full py-3.5 rounded-xl
                 bg-grad-main text-white font-semibold text-sm
                 shadow-glow-blue hover:shadow-glow-purple
                 transition-all duration-300 hover:scale-[1.02]
-                disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+                disabled:hover:scale-100"
             >
-              {loading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <><Send size={16}/> Send Message</>
-              )}
-            </button>
+              <Send size={16}/> Send Message
+            </ButtonLoader>
           </motion.form>
         </div>
       </div>
