@@ -20,8 +20,10 @@
 export function cache(maxAge, sMaxAge) {
     const s = sMaxAge ?? maxAge * 2;
     return (req, res, next) => {
-        if (req.method !== "GET") {
-            // Never cache mutations
+        const isAdminRoute = req.path === '/all' || req.path.startsWith('/admin');
+
+        if (req.method !== "GET" || isAdminRoute) {
+            // Never cache mutations or admin routes
             res.setHeader("Cache-Control", "no-store");
             return next();
         }
